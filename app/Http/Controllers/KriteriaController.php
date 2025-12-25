@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Kriteria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class KriteriaController extends Controller
 {
@@ -29,10 +30,14 @@ class KriteriaController extends Controller
                 ->withInput();
         }
 
-        Kriteria::create($request->all());
-
-        return redirect()->route('kriteria.index')
-            ->with('success', 'Kriteria berhasil ditambahkan!');
+        try {
+            Kriteria::create($request->all());
+            Alert::success('Berhasil', 'Kriteria berhasil ditambahkan!');
+            return redirect()->route('kriteria.index');
+        } catch (\Exception $e) {
+            Alert::error('Gagal', 'Terjadi kesalahan: ' . $e->getMessage());
+            return redirect()->back()->withInput();
+        }
     }
 
     public function update(Request $request, $id)
@@ -52,18 +57,26 @@ class KriteriaController extends Controller
                 ->withInput();
         }
 
-        $kriteria->update($request->all());
-
-        return redirect()->route('kriteria.index')
-            ->with('success', 'Kriteria berhasil diupdate!');
+        try {
+            $kriteria->update($request->all());
+            Alert::success('Berhasil', 'Kriteria berhasil diupdate!');
+            return redirect()->route('kriteria.index');
+        } catch (\Exception $e) {
+            Alert::error('Gagal', 'Terjadi kesalahan: ' . $e->getMessage());
+            return redirect()->back()->withInput();
+        }
     }
 
     public function destroy($id)
     {
-        $kriteria = Kriteria::findOrFail($id);
-        $kriteria->delete();
-
-        return redirect()->route('kriteria.index')
-            ->with('success', 'Kriteria berhasil dihapus!');
+        try {
+            $kriteria = Kriteria::findOrFail($id);
+            $kriteria->delete();
+            Alert::success('Berhasil', 'Kriteria berhasil dihapus!');
+            return redirect()->route('kriteria.index');
+        } catch (\Exception $e) {
+            Alert::error('Gagal', 'Terjadi kesalahan: ' . $e->getMessage());
+            return redirect()->back();
+        }
     }
 }

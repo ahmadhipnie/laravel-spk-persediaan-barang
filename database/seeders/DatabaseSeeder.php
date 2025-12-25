@@ -2,25 +2,24 @@
 
 namespace Database\Seeders;
 
+use App\Models\Alternatif;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Database\Seeders\BarangSeeder;
+use Database\Seeders\AlternatifSeeder;
+use Database\Seeders\KriteriaSeeder;
 
 class DatabaseSeeder extends Seeder
 {
+
     public function run(): void
     {
-        // Create admin user
-        User::updateOrCreate(
-            ['email' => 'admin@admin.com'],
-            [
-                'name' => 'Administrator',
-                'email' => 'admin@admin.com',
-                'password' => Hash::make('password'),
-                'email_verified_at' => now(),
-            ]
-        );
-
-        $this->command->info('Admin user created: admin@admin.com / password');
+        $this->call([
+            BarangSeeder::class,
+            AlternatifSeeder::class,
+            KriteriaSeeder::class,
+            // Tambahkan seeder lain jika ada
+        ]);
     }
 }

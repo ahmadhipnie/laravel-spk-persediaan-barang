@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Barang;
 
 class Alternatif extends Model
 {
@@ -13,6 +14,7 @@ class Alternatif extends Model
 
     protected $fillable = [
         'kode_alternatif',
+        'barang_id',
         'nama_barang',
         'stok_tersedia',
         'keterangan'
@@ -21,6 +23,12 @@ class Alternatif extends Model
     protected $casts = [
         'stok_tersedia' => 'integer'
     ];
+
+    // Relasi ke Barang
+    public function barang()
+    {
+        return $this->belongsTo(Barang::class, 'barang_id');
+    }
 
     // Relasi ke Penilaian
     public function penilaian()
@@ -31,7 +39,7 @@ class Alternatif extends Model
     // Relasi ke Hasil Perhitungan
     public function hasilPerhitungan()
     {
-        return $this->hasOne(HasilPerhitungan::class)->latest();
+        return $this->hasMany(HasilPerhitungan::class);
     }
 
     // Method untuk mendapatkan nilai kriteria tertentu
