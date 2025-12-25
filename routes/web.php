@@ -23,7 +23,7 @@ Route::middleware('guest')->group(function () {
 // Protected Routes (Auth)
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    
+
     // Dashboard Routes
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
     Route::post('/dashboard/hitung-saw', [DashboardController::class, 'hitungSAW'])->name('dashboard.hitung');
@@ -48,6 +48,6 @@ Route::middleware('auth')->group(function () {
     Route::prefix('profile')->name('profile.')->group(function () {
         Route::get('/', [ProfileController::class, 'index'])->name('index');
         Route::put('/update', [ProfileController::class, 'update'])->name('update');
-        Route::put('/password', [ProfileController::class, 'updatePassword'])->name('password');
+        Route::put('/update-password', [ProfileController::class, 'updatePassword'])->name('updatePassword');
     });
 });
