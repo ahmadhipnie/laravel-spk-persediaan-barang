@@ -1,5 +1,10 @@
 <?php
 
+use App\Http\Controllers\AlternatifController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\KriteriaController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,12 +19,15 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('auth.login');});
-Route::get('/dashboard', function () {
-    return view('dashboard');})->name('dashboard');
-Route::get('/register', function () {
-    return view('auth.register');});
+    return view('auth.login');
+});
 
-// Pages: tables & profile
-Route::view('/tables', 'tables')->name('tables');
-Route::view('/profile', 'profile')->name('profile');
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+
+Route::get('/kriteria', [KriteriaController::class, 'index'])->name('kriteria.index');
+
+Route::get('/alternatif', [AlternatifController::class, 'index'])->name('alternatif.index');
+
+Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
