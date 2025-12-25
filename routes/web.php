@@ -1,33 +1,53 @@
 <?php
 
-use App\Http\Controllers\AlternatifController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KriteriaController;
+use App\Http\Controllers\AlternatifController;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
-
+// Redirect root ke login
 Route::get('/', function () {
-    return view('auth.login');
+    return redirect()->route('login');
 });
 
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+// Auth Routes (Guest)
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [AuthController::class, 'register'])->name('register.post');
+});
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+// Protected Routes (Auth)
+Route::middleware('auth')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    
+    // Dashboard Routes
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+    Route::post('/dashboard/hitung-saw', [DashboardController::class, 'hitungSAW'])->name('dashboard.hitung');
 
-Route::get('/kriteria', [KriteriaController::class, 'index'])->name('kriteria.index');
+    // Kriteria Routes
+    Route::prefix('kriteria')->name('kriteria.')->group(function () {
+        Route::get('/', [KriteriaController::class, 'index'])->name('index');
+        Route::post('/', [KriteriaController::class, 'store'])->name('store');
+        Route::put('/{id}', [KriteriaController::class, 'update'])->name('update');
+        Route::delete('/{id}', [KriteriaController::class, 'destroy'])->name('destroy');
+    });
 
-Route::get('/alternatif', [AlternatifController::class, 'index'])->name('alternatif.index');
+    // Alternatif Routes
+    Route::prefix('alternatif')->name('alternatif.')->group(function () {
+        Route::get('/', [AlternatifController::class, 'index'])->name('index');
+        Route::post('/', [AlternatifController::class, 'store'])->name('store');
+        Route::put('/{id}', [AlternatifController::class, 'update'])->name('update');
+        Route::delete('/{id}', [AlternatifController::class, 'destroy'])->name('destroy');
+    });
 
-Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    // Profile Routes
+    Route::prefix('profile')->name('profile.')->group(function () {
+        Route::get('/', [ProfileController::class, 'index'])->name('index');
+        Route::put('/update', [ProfileController::class, 'update'])->name('update');
+        Route::put('/password', [ProfileController::class, 'updatePassword'])->name('password');
+    });
+});

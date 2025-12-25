@@ -233,9 +233,10 @@
                     </a>
                 </li>
 
+                @guest
                 <li class="mt-0.5 w-full">
                     <a class="py-2.7 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors"
-                        href="./pages/sign-in.html">
+                        href="{{ route('login') }}">
                         <div
                             class="shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
                             <svg width="12px" height="12px" viewBox="0 0 40 44" version="1.1"
@@ -264,7 +265,7 @@
 
                 <li class="mt-0.5 w-full">
                     <a class="py-2.7 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors"
-                        href="./pages/sign-up.html">
+                        href="{{ route('register') }}">
                         <div
                             class="shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
                             <svg width="12px" height="20px" viewBox="0 0 40 40" version="1.1"
@@ -296,6 +297,33 @@
                         <span class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">Sign Up</span>
                     </a>
                 </li>
+                @endguest
+
+                @auth
+                <li class="mt-0.5 w-full">
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="w-full text-left py-2.7 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors bg-transparent border-0">
+                            <div class="shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
+                                <svg width="12px" height="12px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                    <title>logout</title>
+                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <g transform="translate(-2020.000000, -442.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                                            <g transform="translate(1716.000000, 291.000000)">
+                                                <g transform="translate(304.000000, 151.000000)">
+                                                    <path class="fill-slate-800 opacity-60" d="M10.5,0 L29.5,0 L29.5,6 L26.5,6 L26.5,3 L13.5,3 L13.5,37 L26.5,37 L26.5,34 L29.5,34 L29.5,40 L10.5,40 Z"></path>
+                                                    <path class="fill-slate-800" d="M21,20 L37,20 L33,16 L34.5,14.5 L40,20 L34.5,25.5 L33,24 L37,20 L21,20 Z"></path>
+                                                </g>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </svg>
+                            </div>
+                            <span class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">Logout</span>
+                        </button>
+                    </form>
+                </li>
+                @endauth
             </ul>
         </div>
 
