@@ -26,10 +26,11 @@
 <body class="m-0 font-sans antialiased font-normal bg-white text-start text-base leading-default text-slate-500">
     @include('sweetalert::alert')
     <main class="mt-0 transition-all duration-200 ease-soft-in-out">
-        <section class="min-h-screen mb-32">
-            <div class="relative flex items-start pt-12 pb-56 m-4 overflow-hidden bg-center bg-cover min-h-50-screen rounded-xl"
-                style="
-            background-image: url('{{ asset('theme/img/curved-images/curved14.jpg') }}');
+      <section class="min-h-screen mb-32">
+        <div
+          class="relative flex items-start pt-12 pb-56 m-4 overflow-hidden bg-center bg-cover min-h-50-screen rounded-xl"
+          style="
+            background-image: url('{{ asset('theme/img/curved-images/register-pic.jpg') }}');
           ">
                 <span
                     class="absolute top-0 left-0 w-full h-full bg-center bg-cover bg-gradient-to-tl from-gray-900 to-slate-800 opacity-60"></span>
