@@ -55,7 +55,7 @@
         <div
           class="relative flex items-start pt-12 pb-56 m-4 overflow-hidden bg-center bg-cover min-h-50-screen rounded-xl"
           style="
-            background-image: url('{{ asset('theme/img/curved-images/curved14.jpg') }}');
+            background-image: url('{{ asset('theme/img/curved-images/register-pic.jpg') }}');
           ">
           <span
             class="absolute top-0 left-0 w-full h-full bg-center bg-cover bg-gradient-to-tl from-gray-900 to-slate-800 opacity-60"></span>
