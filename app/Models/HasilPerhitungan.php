@@ -2,15 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class HasilPerhitungan extends Model
 {
-    use HasFactory;
-
     protected $table = 'hasil_perhitungan';
-
+    
     protected $fillable = [
         'alternatif_id',
         'nilai_akhir',
@@ -22,24 +20,12 @@ class HasilPerhitungan extends Model
     protected $casts = [
         'nilai_akhir' => 'decimal:4',
         'ranking' => 'integer',
-        'tanggal_perhitungan' => 'datetime'
+        'tanggal_perhitungan' => 'datetime',
     ];
 
     // Relasi ke Alternatif
-    public function alternatif()
+    public function alternatif(): BelongsTo
     {
         return $this->belongsTo(Alternatif::class);
-    }
-
-    // Method untuk menentukan status rekomendasi
-    public static function tentukanStatus($ranking)
-    {
-        if ($ranking <= 3) {
-            return 'Prioritas Tinggi';
-        } elseif ($ranking <= 7) {
-            return 'Prioritas Sedang';
-        } else {
-            return 'Prioritas Rendah';
-        }
     }
 }
