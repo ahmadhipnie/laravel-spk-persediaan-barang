@@ -14,5 +14,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('auth.login');});
+Route::get('/dashboard', function () {
+    return view('dashboard');})->name('dashboard');
+Route::get('/register', function () {
+    return view('auth.register');});
+
+// Pages: tables & profile
+Route::view('/tables', 'tables')->name('tables');
+Route::view('/profile', 'profile')->name('profile');
