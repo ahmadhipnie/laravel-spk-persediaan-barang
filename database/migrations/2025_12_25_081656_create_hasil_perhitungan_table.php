@@ -8,19 +8,19 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('hasil_saw', function (Blueprint $table) {
+        Schema::create('hasil_perhitungan', function (Blueprint $table) {
             $table->id();
             $table->foreignId('alternatif_id')->constrained('alternatif')->onDelete('cascade');
-            $table->decimal('nilai_akhir', 10, 4); // Hasil perhitungan SAW
+            $table->decimal('nilai_akhir', 10, 4);
             $table->integer('ranking');
-            $table->date('tanggal_perhitungan');
-            $table->text('rekomendasi')->nullable();
+            $table->string('status_rekomendasi', 50); // 'Prioritas Tinggi', 'Prioritas Sedang', 'Prioritas Rendah'
+            $table->timestamp('tanggal_perhitungan');
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('hasil_saw');
+        Schema::dropIfExists('hasil_perhitungan');
     }
 };

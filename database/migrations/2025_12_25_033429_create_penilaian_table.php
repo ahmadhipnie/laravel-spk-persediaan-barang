@@ -12,10 +12,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('alternatif_id')->constrained('alternatif')->onDelete('cascade');
             $table->foreignId('kriteria_id')->constrained('kriteria')->onDelete('cascade');
-            $table->decimal('nilai', 10, 2); // Nilai mentah sebelum normalisasi
+            $table->decimal('nilai', 10, 2);
             $table->timestamps();
             
-            // Unique constraint agar tidak ada duplikat penilaian
+            // Unique constraint untuk mencegah duplikasi penilaian
             $table->unique(['alternatif_id', 'kriteria_id']);
         });
     }
