@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class AuthController extends Controller
 {
@@ -26,8 +27,6 @@ class AuthController extends Controller
     // Proses login
     public function login(Request $request)
     {
-        // Debug log to verify request reached controller
-        Log::info('AuthController@login called', ['email' => $request->email, 'has_csrf' => $request->has('_token')]);
 
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
@@ -42,10 +41,12 @@ class AuthController extends Controller
 
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $request->session()->regenerate();
+            Alert::success('Berhasil!', 'Selamat datang kembali, ' . Auth::user()->name . '!');
             return redirect()->route('dashboard.index')
                 ->with('success', 'Login berhasil!');
         }
 
+        Alert::error('Gagal!', 'Email atau password salah!');
         return redirect()->back()
             ->with('error', 'Email atau password salah!')
             ->withInput();
@@ -54,29 +55,46 @@ class AuthController extends Controller
     // Proses register
     public function register(Request $request)
     {
-        // Debug log to verify register request
-        Log::info('AuthController@register called', ['email' => $request->email, 'has_csrf' => $request->has('_token')]);
-
+        // Validasi input
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6|confirmed'
         ]);
 
+        // Cek jika validasi gagal
         if ($validator->fails()) {
+            Alert::error('Gagal!', 'Mohon periksa kembali data yang Anda masukkan.');
             return redirect()->back()
                 ->withErrors($validator)
                 ->withInput();
         }
 
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password)
-        ]);
+        // Try catch untuk eksekusi tambah data
+        try {
+            // Attempt to create user
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password)
+            ]);
 
-        return redirect()->route('login')
-            ->with('success', 'Registrasi berhasil! Silakan login.');
+            // Cek apakah user berhasil dibuat
+            if ($user) {
+                Alert::success('Berhasil!', 'Registrasi berhasil! Silakan login.');
+                return redirect()->route('login');
+            } else {
+                Alert::error('Gagal!', 'Terjadi kesalahan saat membuat akun.');
+                return redirect()->back()->withInput();
+            }
+
+        } catch (\Exception $e) {
+            // Log error untuk debugging
+            Log::error('Error saat registrasi: ' . $e->getMessage());
+
+            Alert::error('Gagal!', 'Terjadi kesalahan sistem. Silakan coba lagi.');
+            return redirect()->back()->withInput();
+        }
     }
 
     // Proses logout
@@ -85,7 +103,9 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        
+
+
+        Alert::success('Berhasil!', 'Anda telah logout.');
         return redirect()->route('login')
             ->with('success', 'Logout berhasil!');
     }
