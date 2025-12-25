@@ -95,14 +95,7 @@
                                                 <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
                                             @enderror
                                         </div>
-                                        <div class="min-h-6 mb-0.5 block pl-12">
-                                            <input id="rememberMe"
-                                                class="mt-0.5 rounded-10 duration-250 ease-soft-in-out after:rounded-circle after:shadow-soft-2xl after:duration-250 checked:after:translate-x-5.3 h-5 relative float-left -ml-12 w-10 cursor-pointer appearance-none border border-solid border-gray-200 bg-slate-800/10 bg-none bg-contain bg-left bg-no-repeat align-top transition-all after:absolute after:top-px after:h-4 after:w-4 after:translate-x-px after:bg-white after:content-[''] checked:border-slate-800/95 checked:bg-slate-800/95 checked:bg-none checked:bg-right"
-                                                type="checkbox" name="remember" />
-                                            <label
-                                                class="mb-2 ml-1 font-normal cursor-pointer select-none text-sm text-slate-700"
-                                                for="rememberMe">Remember me</label>
-                                        </div>
+                                        
                                         <div class="text-center">
                                             <button type="submit"
                                                 class="inline-block w-full px-6 py-3 mt-6 mb-0 font-bold text-center text-white uppercase align-middle transition-all bg-transparent border-0 rounded-lg cursor-pointer shadow-soft-md bg-x-25 bg-150 leading-pro text-xs ease-soft-in tracking-tight-soft bg-gradient-to-tl from-blue-600 to-cyan-400 hover:scale-102 hover:shadow-soft-xs active:opacity-85">Sign
