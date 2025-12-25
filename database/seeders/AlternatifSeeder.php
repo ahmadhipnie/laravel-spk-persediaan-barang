@@ -1,131 +1,79 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Database\Seeders;
 
+use Illuminate\Database\Seeder;
 use App\Models\Alternatif;
-use App\Models\Kriteria;
-use App\Models\Penilaian;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
-class AlternatifController extends Controller
+class AlternatifSeeder extends Seeder
 {
-    // Menampilkan daftar alternatif
-    public function index()
+    public function run(): void
     {
-        $alternatif = Alternatif::with('penilaian.kriteria')
-            ->orderBy('kode_alternatif')
-            ->get();
-        
-        $kriteria = Kriteria::orderBy('kode_kriteria')->get();
-        
-        return view('alternatif.index', compact('alternatif', 'kriteria'));
-    }
+        $alternatifData = [
+            [
+                'kode_alternatif' => 'A001',
+                'nama_barang' => 'Kertas A4 80gsm',
+                'stok_tersedia' => 50,
+                'keterangan' => 'Kertas HVS untuk keperluan administrasi kantor'
+            ],
+            [
+                'kode_alternatif' => 'A002',
+                'nama_barang' => 'Tinta Printer HP Black',
+                'stok_tersedia' => 15,
+                'keterangan' => 'Tinta original HP untuk printer kantor'
+            ],
+            [
+                'kode_alternatif' => 'A003',
+                'nama_barang' => 'Spidol Whiteboard',
+                'stok_tersedia' => 120,
+                'keterangan' => 'Spidol untuk papan tulis meeting room'
+            ],
+            [
+                'kode_alternatif' => 'A004',
+                'nama_barang' => 'Buku Tulis 50 Lembar',
+                'stok_tersedia' => 30,
+                'keterangan' => 'Buku tulis untuk training karyawan'
+            ],
+            [
+                'kode_alternatif' => 'A005',
+                'nama_barang' => 'Stapler Joyko HD-10D',
+                'stok_tersedia' => 8,
+                'keterangan' => 'Stapler besar untuk keperluan arsip'
+            ],
+            [
+                'kode_alternatif' => 'A006',
+                'nama_barang' => 'Penghapus Whiteboard',
+                'stok_tersedia' => 25,
+                'keterangan' => 'Penghapus magnetic untuk whiteboard'
+            ],
+            [
+                'kode_alternatif' => 'A007',
+                'nama_barang' => 'Amplop Coklat Folio',
+                'stok_tersedia' => 200,
+                'keterangan' => 'Amplop untuk surat menyurat'
+            ],
+            [
+                'kode_alternatif' => 'A008',
+                'nama_barang' => 'Gunting Kertas',
+                'stok_tersedia' => 12,
+                'keterangan' => 'Gunting stainless steel untuk keperluan umum'
+            ],
+            [
+                'kode_alternatif' => 'A009',
+                'nama_barang' => 'Lem Kertas UHU Stick',
+                'stok_tersedia' => 40,
+                'keterangan' => 'Lem stick untuk keperluan administrasi'
+            ],
+            [
+                'kode_alternatif' => 'A010',
+                'nama_barang' => 'Tipe-X Correction Tape',
+                'stok_tersedia' => 18,
+                'keterangan' => 'Tipe-X model tape untuk koreksi dokumen'
+            ],
+        ];
 
-    // Menyimpan alternatif baru
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'kode_alternatif' => 'required|unique:alternatif,kode_alternatif',
-            'nama_barang' => 'required|max:255',
-            'stok_tersedia' => 'required|integer|min:0',
-            'keterangan' => 'nullable|string'
-        ]);
-
-        DB::beginTransaction();
-        try {
-            // Simpan alternatif
-            $alternatif = Alternatif::create($validated);
-
-            // Simpan penilaian untuk setiap kriteria
-            $kriteria = Kriteria::all();
-            foreach ($kriteria as $krit) {
-                $nilaiField = 'nilai_' . $krit->id;
-                if ($request->has($nilaiField)) {
-                    Penilaian::create([
-                        'alternatif_id' => $alternatif->id,
-                        'kriteria_id' => $krit->id,
-                        'nilai' => $request->input($nilaiField)
-                    ]);
-                }
-            }
-
-            DB::commit();
-            return redirect()->route('alternatif.index')
-                ->with('success', 'Alternatif berhasil ditambahkan!');
-                
-        } catch (\Exception $e) {
-            DB::rollback();
-            return redirect()->back()
-                ->with('error', 'Gagal menambahkan alternatif: ' . $e->getMessage())
-                ->withInput();
-        }
-    }
-
-    // Update alternatif
-    public function update(Request $request, $id)
-    {
-        $alternatif = Alternatif::findOrFail($id);
-
-        $validated = $request->validate([
-            'kode_alternatif' => 'required|unique:alternatif,kode_alternatif,' . $id,
-            'nama_barang' => 'required|max:255',
-            'stok_tersedia' => 'required|integer|min:0',
-            'keterangan' => 'nullable|string'
-        ]);
-
-        DB::beginTransaction();
-        try {
-            // Update alternatif
-            $alternatif->update($validated);
-
-            // Update penilaian untuk setiap kriteria
-            $kriteria = Kriteria::all();
-            foreach ($kriteria as $krit) {
-                $nilaiField = 'nilai_' . $krit->id;
-                if ($request->has($nilaiField)) {
-                    Penilaian::updateOrCreate(
-                        [
-                            'alternatif_id' => $alternatif->id,
-                            'kriteria_id' => $krit->id
-                        ],
-                        [
-                            'nilai' => $request->input($nilaiField)
-                        ]
-                    );
-                }
-            }
-
-            DB::commit();
-            return redirect()->route('alternatif.index')
-                ->with('success', 'Alternatif berhasil diupdate!');
-                
-        } catch (\Exception $e) {
-            DB::rollback();
-            return redirect()->back()
-                ->with('error', 'Gagal mengupdate alternatif: ' . $e->getMessage())
-                ->withInput();
-        }
-    }
-
-    // Hapus alternatif
-    public function destroy($id)
-    {
-        try {
-            $alternatif = Alternatif::findOrFail($id);
-            
-            // Hapus penilaian terkait (cascade delete via model relationship)
-            $alternatif->penilaian()->delete();
-            
-            // Hapus alternatif
-            $alternatif->delete();
-
-            return redirect()->route('alternatif.index')
-                ->with('success', 'Alternatif berhasil dihapus!');
-                
-        } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Gagal menghapus alternatif: ' . $e->getMessage());
+        foreach ($alternatifData as $alternatif) {
+            Alternatif::create($alternatif);
         }
     }
 }
