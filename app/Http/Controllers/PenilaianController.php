@@ -7,11 +7,19 @@ use App\Models\Penilaian;
 use App\Models\Alternatif;
 use App\Models\Kriteria;
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Facades\Log;
 
 class PenilaianController extends Controller
 {
     public function index()
     {
+        // Safety: remove any orphan penilaian (references to non-existing alternatif)
+        $orphanCount = Penilaian::whereNotIn('alternatif_id', Alternatif::pluck('id'))->count();
+        if ($orphanCount > 0) {
+            Log::warning("Found {$orphanCount} orphan penilaian records; deleting them to keep data consistent.");
+            Penilaian::whereNotIn('alternatif_id', Alternatif::pluck('id'))->delete();
+            Alert::warning('Data Diperbaiki', "Ditemukan dan dihapus {$orphanCount} penilaian yang tidak memiliki referensi alternatif.");
+        }
         $alternatifs = Alternatif::with(['penilaian.kriteria'])->get();
         $kriterias = Kriteria::all();
         
