@@ -1,80 +1,78 @@
 @extends('layouts.app')
-@section('title', 'dashboard admin')
+@section('title', 'Data Alternatif')
+@section('subtitle', 'Master Data')
+
 @section('content')
+<div class="w-full p-6">
+    <div class="flex flex-wrap -mx-3 px-6">
+        <div class="flex-none w-full max-w-full ">
+            <div class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 shadow-soft-xl rounded-2xl bg-clip-border">
+                <div class="p-4 pb-0 mb-0 bg-white rounded-t-2xl">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h6>Data Alternatif</h6>
+                            <p class="text-sm text-slate-500">Daftar alternatif (barang pilihan)</p>
+                        </div>
+                        <a href="{{ route('alternatif.create') }}" class="inline-block px-6 py-3 font-bold text-center text-white uppercase rounded-lg bg-gradient-to-tl from-gray-900 to-slate-800 hover:shadow-soft-xs">
+                            <i class="fas fa-plus"></i> Tambah Alternatif
+                        </a>
+                    </div>
+                </div>
 
-<div class="flex flex-wrap -mx-3">
+                @if(session('success'))
+                <div class="mx-6 mt-4 px-4 py-3 text-sm rounded-lg bg-green-50 text-green-700">{{ session('success') }}</div>
+                @endif
+                @if(session('error'))
+                <div class="mx-6 mt-4 px-4 py-3 text-sm rounded-lg bg-red-50 text-red-700">{{ session('error') }}</div>
+                @endif
 
-    <h1>Halaman Alternatif</h1>
-
-</div>
-
-<div class="mt-4 mb-6">
-    <button onclick="openAlternatifModal()" class="inline-block px-6 py-3 font-bold text-center text-white uppercase align-middle transition-all bg-transparent rounded-lg cursor-pointer leading-pro text-xs ease-soft-in shadow-soft-md bg-150 bg-gradient-to-tl from-gray-900 to-slate-800 hover:shadow-soft-xs active:opacity-85 hover:scale-102 tracking-tight-soft bg-x-25">
-        <i class="fas fa-plus"></i> Tambah Alternatif
-    </button>
-</div>
-
-{{-- Flash Messages --}}
-@if(session('success'))
-<div class="mb-4 px-4 py-3 text-sm rounded-lg bg-green-50 text-green-700">{{ session('success') }}</div>
-@endif
-@if(session('error'))
-<div class="mb-4 px-4 py-3 text-sm rounded-lg bg-red-50 text-red-700">{{ session('error') }}</div>
-@endif
-
-<div class="flex-none w-full max-w-full px-3">
-    <div class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-soft-xl rounded-2xl bg-clip-border">
-        <div class="p-6 pb-0 mb-0 bg-white border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
-            <h6>Data Alternatif</h6>
-            <p class="text-sm text-slate-500">Daftar alternatif (barang pilihan)</p>
-        </div>
-
-        <div class="flex-auto px-0 pt-0 pb-2">
-            <div class="p-0 overflow-x-auto">
-                <table class="items-center w-full mb-0 align-top border-gray-200 text-slate-500">
-                    <thead class="align-bottom">
-                        <tr>
-                            <th class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-gray-200 shadow-none text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">No</th>
-                            <th class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-gray-200 shadow-none text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Kode</th>
-                            <th class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-gray-200 shadow-none text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Nama Barang</th>
-                            <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-gray-200 shadow-none text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Stok</th>
-                            <th class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-gray-200 shadow-none text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Keterangan</th>
-                            <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-gray-200 shadow-none text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($alternatifs as $index => $alternatif)
-                        <tr>
-                            <td class="p-2 align-middle bg-transparent border-b whitespace-nowrap shadow-transparent"><p class="mb-0 font-semibold leading-tight text-xs px-4">{{ $index + 1 }}</p></td>
-                            <td class="p-2 align-middle bg-transparent border-b whitespace-nowrap shadow-transparent"><p class="mb-0 font-semibold leading-tight text-xs">{{ $alternatif->kode_alternatif }}</p></td>
-                            <td class="p-2 align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
-                                <p class="mb-0 font-semibold leading-tight text-xs">{{ $alternatif->nama_barang }}</p>
-                                @if($alternatif->barang)
-                                <p class="mb-0 leading-tight text-xxs text-slate-400">{{ $alternatif->barang->kode_barang ?? '' }}</p>
-                                @endif
-                            </td>
-                            <td class="p-2 text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent"><span class="inline-block px-3 py-1 text-xs font-bold {{ $alternatif->stok_tersedia <= 0 ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800' }} rounded-full">{{ $alternatif->stok_tersedia }}</span></td>
-                            <td class="p-2 align-middle bg-transparent border-b whitespace-nowrap shadow-transparent"><p class="mb-0 text-xs">{{ $alternatif->keterangan ?? '-' }}</p></td>
-                            <td class="p-2 text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
-                                <button onclick='editAlternatifModal(@json($alternatif))' class="inline-block px-4 py-2 mb-0 font-bold text-center uppercase align-middle transition-all bg-transparent border-0 rounded-lg shadow-none cursor-pointer leading-pro text-xs ease-soft-in bg-150 hover:scale-102 active:opacity-85 bg-x-25 text-slate-700"><i class="fas fa-edit text-blue-500"></i></button>
-
-                                <form action="{{ route('alternatif.destroy', $alternatif->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Hapus alternatif ini?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="px-4 py-2 mb-0 font-bold text-center uppercase align-middle transition-all bg-transparent border-0 rounded-lg shadow-none cursor-pointer leading-pro text-xs ease-soft-in bg-150 hover:scale-102 active:opacity-85 bg-x-25"><i class="fas fa-trash text-red-500"></i></button>
-                                </form>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="6" class="p-6 text-center">
-                                <i class="fas fa-inbox text-4xl text-gray-300 mb-2"></i>
-                                <p class="text-sm text-gray-500">Belum ada data alternatif</p>
-                            </td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                <div class="flex-auto p-4">
+                    <div class="overflow-x-auto w-full">
+                        <table class="items-center w-full min-w-full table-auto mb-0 align-top border-gray-200 text-slate-500 whitespace-normal">
+                            <thead class="align-bottom">
+                                <tr>
+                                    <th class="px-6 py-4 font-bold text-left text-xs text-slate-400">No</th>
+                                    <th class="px-6 py-4 font-bold text-left text-xs text-slate-400">Kode</th>
+                                    <th class="px-6 py-4 font-bold text-left text-xs text-slate-400">Nama Barang</th>
+                                    <th class="px-6 py-4 font-bold text-center text-xs text-slate-400">Stok</th>
+                                    <th class="px-6 py-4 font-bold text-left text-xs text-slate-400">Keterangan</th>
+                                    <th class="px-6 py-4 font-bold text-center text-xs text-slate-400">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($alternatifs as $index => $alternatif)
+                                <tr>
+                                    <td class="px-6 py-4 align-middle"><p class="mb-0 font-semibold leading-tight text-sm">{{ $index + 1 }}</p></td>
+                                    <td class="px-6 py-4 align-middle"><p class="mb-0 font-semibold leading-tight text-sm">{{ $alternatif->kode_alternatif }}</p></td>
+                                    <td class="px-6 py-4 align-middle">
+                                        <p class="mb-0 font-semibold leading-tight text-sm">{{ $alternatif->nama_barang }}</p>
+                                        @if($alternatif->barang)
+                                        <p class="mb-0 leading-tight text-xs text-slate-400">{{ $alternatif->barang->kode_barang ?? '' }}</p>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-4 text-center align-middle"><span class="inline-block px-3 py-1 text-sm font-bold {{ $alternatif->stok_tersedia <= 0 ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800' }} rounded-full">{{ $alternatif->stok_tersedia }}</span></td>
+                                    <td class="px-6 py-4 align-middle"><p class="mb-0 text-sm">{{ $alternatif->keterangan ?? '-' }}</p></td>
+                                    <td class="px-6 py-4 text-center align-middle">
+                                        <a href="{{ route('alternatif.edit', $alternatif->id) }}" class="inline-flex items-center gap-2 px-3 py-2 mr-2 font-semibold text-sm text-white bg-blue-500 hover:bg-blue-600 rounded"> <i class="fas fa-edit"></i> Edit</a>
+                                        <form action="{{ route('alternatif.destroy', $alternatif->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Hapus alternatif ini?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="inline-flex items-center gap-2 px-3 py-2 font-semibold text-sm text-white bg-red-500 hover:bg-red-600 rounded"> <i class="fas fa-trash"></i> Hapus</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="6" class="p-6 text-center">
+                                        <i class="fas fa-inbox text-4xl text-gray-300 mb-2"></i>
+                                        <p class="text-sm text-gray-500">Belum ada data alternatif</p>
+                                    </td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -92,57 +90,38 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700">Kode Alternatif *</label>
-                        <input type="text" name="kode_alternatif" id="kode_alternatif" required
-                            class="focus:shadow-soft-primary-outline text-sm leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 transition-all focus:border-fuchsia-300 focus:outline-none"
-                            placeholder="ALT001">
+                        <input type="text" name="kode_alternatif" id="kode_alternatif" required class="block w-full rounded-lg border px-3 py-2" placeholder="ALT001">
                     </div>
 
-                    <!-- Dropdown pilih barang -->
                     <div>
                         <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700">Pilih Barang dari Master *</label>
-                        <select name="barang_id" id="barang_id" required onchange="fillBarangData()"
-                            class="focus:shadow-soft-primary-outline text-sm leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 transition-all focus:border-fuchsia-300 focus:outline-none">
+                        <select name="barang_id" id="barang_id" required onchange="fillBarangData()" class="block w-full rounded-lg border px-3 py-2">
                             <option value="">-- Pilih Barang --</option>
                             @foreach($barangs as $brg)
-                            <option value="{{ $brg->id }}" 
-                                    data-kode="{{ $brg->kode_barang }}"
-                                    data-nama="{{ $brg->nama_barang }}"
-                                    data-stok="{{ $brg->stok_tersedia }}">
-                                {{ $brg->kode_barang }} - {{ $brg->nama_barang }} (Stok: {{ $brg->stok_tersedia }})
-                            </option>
+                            <option value="{{ $brg->id }}" data-kode="{{ $brg->kode_barang }}" data-nama="{{ $brg->nama_barang }}" data-stok="{{ $brg->stok_tersedia }}">{{ $brg->kode_barang }} - {{ $brg->nama_barang }} (Stok: {{ $brg->stok_tersedia }})</option>
                             @endforeach
                         </select>
                     </div>
 
                     <div>
                         <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700">Nama Barang</label>
-                        <input type="text" name="nama_barang" id="alt_nama_barang" readonly
-                            class="focus:shadow-soft-primary-outline text-sm leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-200 bg-gray-100 bg-clip-padding px-3 py-2 font-normal text-gray-700 transition-all">
+                        <input type="text" name="nama_barang" id="alt_nama_barang" readonly class="block w-full rounded-lg border bg-gray-100 px-3 py-2">
                     </div>
 
                     <div>
                         <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700">Stok Tersedia</label>
-                        <input type="number" name="stok_tersedia" id="alt_stok_tersedia" readonly min="0"
-                            class="focus:shadow-soft-primary-outline text-sm leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-200 bg-gray-100 bg-clip-padding px-3 py-2 font-normal text-gray-700 transition-all">
+                        <input type="number" name="stok_tersedia" id="alt_stok_tersedia" readonly min="0" class="block w-full rounded-lg border bg-gray-100 px-3 py-2">
                     </div>
 
                     <div class="md:col-span-2">
                         <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700">Keterangan</label>
-                        <textarea name="keterangan" id="alt_keterangan" rows="3"
-                            class="focus:shadow-soft-primary-outline text-sm leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 transition-all focus:border-fuchsia-300 focus:outline-none"
-                            placeholder="Keterangan (opsional)"></textarea>
+                        <textarea name="keterangan" id="alt_keterangan" rows="3" class="block w-full rounded-lg border px-3 py-2" placeholder="Keterangan (opsional)"></textarea>
                     </div>
                 </div>
 
                 <div class="flex gap-2 mt-6">
-                    <button type="submit"
-                        class="inline-block px-6 py-3 font-bold text-center text-white uppercase align-middle transition-all bg-transparent rounded-lg cursor-pointer leading-pro text-xs ease-soft-in shadow-soft-md bg-150 bg-gradient-to-tl from-gray-900 to-slate-800 hover:shadow-soft-xs active:opacity-85 hover:scale-102 tracking-tight-soft bg-x-25">
-                        Simpan
-                    </button>
-                    <button type="button" onclick="closeAlternatifModal()"
-                        class="inline-block px-6 py-3 font-bold text-center text-slate-700 uppercase align-middle transition-all bg-transparent border border-solid rounded-lg cursor-pointer leading-pro text-xs ease-soft-in shadow-soft-md bg-150 border-slate-700 hover:shadow-soft-xs active:opacity-85 hover:scale-102 tracking-tight-soft bg-x-25">
-                        Batal
-                    </button>
+                    <button type="submit" class="px-6 py-3 font-bold text-white bg-gray-800 rounded">Simpan</button>
+                    <button type="button" onclick="closeAlternatifModal()" class="px-6 py-3 font-bold text-slate-700 border rounded">Batal</button>
                 </div>
             </form>
         </div>
@@ -167,7 +146,6 @@
         document.getElementById('alternatifForm').action = '/alternatif/' + item.id;
         document.getElementById('alternatifFormMethod').value = 'PUT';
         document.getElementById('kode_alternatif').value = item.kode_alternatif;
-        // try select barang if available
         if (item.barang_id) document.getElementById('barang_id').value = item.barang_id;
         if (item.barang_id) fillBarangData();
         document.getElementById('alt_nama_barang').value = item.nama_barang;
@@ -180,7 +158,6 @@
         document.getElementById('alternatifModal').classList.add('hidden');
     }
 
-    // Fill nama_barang and stok when barang selection changes
     function fillBarangData() {
         const sel = document.getElementById('barang_id');
         const opt = sel.options[sel.selectedIndex];
@@ -191,19 +168,16 @@
         }
         document.getElementById('alt_nama_barang').value = opt.dataset.nama || '';
         document.getElementById('alt_stok_tersedia').value = opt.dataset.stok || '';
-        // Optionally, generate kode based on barang kode
         if (opt.dataset.kode && !document.getElementById('kode_alternatif').value) {
             document.getElementById('kode_alternatif').value = opt.dataset.kode;
         }
     }
 
-    // Close modal when clicking outside
     document.getElementById('alternatifModal').addEventListener('click', function(e) {
-        if (e.target === this) {
-            closeAlternatifModal();
-        }
+        if (e.target === this) closeAlternatifModal();
     });
 </script>
+
 
 <footer class="pt-4">
     <div class="w-full px-6 mx-auto">

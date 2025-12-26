@@ -35,7 +35,9 @@ Route::middleware('auth')->group(function () {
     // Barang Routes (Master Data)
 Route::prefix('barang')->name('barang.')->group(function () {
     Route::get('/', [BarangController::class, 'index'])->name('index');
+    Route::get('/create', [BarangController::class, 'create'])->name('create');
     Route::post('/', [BarangController::class, 'store'])->name('store');
+    Route::get('/{id}/edit', [BarangController::class, 'edit'])->name('edit');
     Route::put('/{id}', [BarangController::class, 'update'])->name('update');
     Route::delete('/{id}', [BarangController::class, 'destroy'])->name('destroy');
 });
@@ -44,7 +46,9 @@ Route::prefix('barang')->name('barang.')->group(function () {
     // Kriteria Routes
     Route::prefix('kriteria')->name('kriteria.')->group(function () {
         Route::get('/', [KriteriaController::class, 'index'])->name('index');
+        Route::get('/create', [KriteriaController::class, 'create'])->name('create');
         Route::post('/', [KriteriaController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [KriteriaController::class, 'edit'])->name('edit');
         Route::put('/{id}', [KriteriaController::class, 'update'])->name('update');
         Route::delete('/{id}', [KriteriaController::class, 'destroy'])->name('destroy');
     });
@@ -52,7 +56,9 @@ Route::prefix('barang')->name('barang.')->group(function () {
     // Alternatif Routes
     Route::prefix('alternatif')->name('alternatif.')->group(function () {
         Route::get('/', [AlternatifController::class, 'index'])->name('index');
+        Route::get('/create', [AlternatifController::class, 'create'])->name('create');
         Route::post('/', [AlternatifController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [AlternatifController::class, 'edit'])->name('edit');
         Route::put('/{id}', [AlternatifController::class, 'update'])->name('update');
         Route::delete('/{id}', [AlternatifController::class, 'destroy'])->name('destroy');
     });

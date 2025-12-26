@@ -15,6 +15,11 @@ class KriteriaController extends Controller
         return view('kriteria.index', compact('kriteria'));
     }
 
+    public function create()
+    {
+        return view('kriteria.create');
+    }
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -38,6 +43,12 @@ class KriteriaController extends Controller
             Alert::error('Gagal', 'Terjadi kesalahan: ' . $e->getMessage());
             return redirect()->back()->withInput();
         }
+    }
+
+    public function edit($id)
+    {
+        $kriteria = Kriteria::findOrFail($id);
+        return view('kriteria.edit', compact('kriteria'));
     }
 
     public function update(Request $request, $id)

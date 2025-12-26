@@ -20,6 +20,12 @@ class AlternatifController extends Controller
     return view('alternatif.index', compact('alternatifs', 'barangs'));
 }
 
+    public function create()
+    {
+        $barangs = Barang::all();
+        return view('alternatif.create', compact('barangs'));
+    }
+
     public function store(Request $request)
    {
     $request->validate([
@@ -39,6 +45,13 @@ class AlternatifController extends Controller
         return back()->withInput();
     }
 }
+
+    public function edit($id)
+    {
+        $alternatif = Alternatif::findOrFail($id);
+        $barangs = Barang::all();
+        return view('alternatif.edit', compact('alternatif', 'barangs'));
+    }
 
     public function update(Request $request, $id)
     {
