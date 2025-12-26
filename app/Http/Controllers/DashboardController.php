@@ -25,18 +25,41 @@ class DashboardController extends Controller
         $hasilTerakhir = HasilPerhitungan::with('alternatif')
             ->orderBy('tanggal_perhitungan', 'desc')
             ->first();
-        
+
         // Top 5 Rekomendasi
         $topRekomendasi = HasilPerhitungan::with('alternatif')
             ->orderBy('ranking', 'asc')
             ->limit(5)
             ->get();
 
+        // Additional stats for dashboard charts
+        $totalPerhitungan = HasilPerhitungan::count();
+
+        $highPriority = HasilPerhitungan::where('status_rekomendasi', 'Prioritas Tinggi')->count();
+        $mediumPriority = HasilPerhitungan::where('status_rekomendasi', 'Prioritas Sedang')->count();
+        $lowPriority = HasilPerhitungan::where('status_rekomendasi', 'Prioritas Rendah')->count();
+
+        // Stock status (join with barang for stok_minimum)
+        $safeStock = Alternatif::join('barang', 'alternatif.barang_id', '=', 'barang.id')
+            ->whereColumn('alternatif.stok_tersedia', '>=', 'barang.stok_minimum')
+            ->count();
+        $lowStock = Alternatif::join('barang', 'alternatif.barang_id', '=', 'barang.id')
+            ->whereColumn('alternatif.stok_tersedia', '<', 'barang.stok_minimum')
+            ->count();
+        $criticalStock = Alternatif::where('stok_tersedia', '<=', 0)->count();
+
         return view('dashboard.index', compact(
             'totalAlternatif',
             'totalKriteria',
             'hasilTerakhir',
-            'topRekomendasi'
+            'topRekomendasi',
+            'totalPerhitungan',
+            'highPriority',
+            'mediumPriority',
+            'lowPriority',
+            'safeStock',
+            'lowStock',
+            'criticalStock'
         ));
     }
 

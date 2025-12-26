@@ -66,7 +66,7 @@
                                 Prioritas Tinggi
                             </p>
                             <h5 class="mb-0 font-bold">
-                                {{ \App\Models\HasilPerhitungan::where('status_rekomendasi', 'Prioritas Tinggi')->count() }}
+                                {{ $highPriority }}
                                 <span class="text-xs leading-normal text-red-600">urgent</span>
                             </h5>
                         </div>
@@ -91,7 +91,7 @@
                                 Perhitungan
                             </p>
                             <h5 class="mb-0 font-bold">
-                                {{ \App\Models\HasilPerhitungan::count() }}
+                                {{ $totalPerhitungan }}
                                 <span class="text-xs leading-normal text-lime-500">total</span>
                             </h5>
                         </div>
@@ -317,10 +317,10 @@ document.addEventListener('DOMContentLoaded', function() {
             priorityCanvas.height = containerHeight;
         }
 
-        // Pastikan data valid
-        const highPriority = {{ \App\Models\HasilPerhitungan::where('status_rekomendasi', 'Prioritas Tinggi')->count() }};
-        const mediumPriority = {{ \App\Models\HasilPerhitungan::where('status_rekomendasi', 'Prioritas Sedang')->count() }};
-        const lowPriority = {{ \App\Models\HasilPerhitungan::where('status_rekomendasi', 'Prioritas Rendah')->count() }};
+        // Pastikan data valid (data disediakan dari controller)
+        const highPriority = {{ $highPriority ?? 0 }};
+        const mediumPriority = {{ $mediumPriority ?? 0 }};
+        const lowPriority = {{ $lowPriority ?? 0 }};
 
         // Cek jika semua data 0
         if (highPriority === 0 && mediumPriority === 0 && lowPriority === 0) {
@@ -414,13 +414,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Hitung data
-        const safeStock = {{ \App\Models\Alternatif::join('barang', 'alternatif.barang_id', '=', 'barang.id')
-            ->whereColumn('alternatif.stok_tersedia', '>=', 'barang.stok_minimum')
-            ->count() }};
-        const lowStock = {{ \App\Models\Alternatif::join('barang', 'alternatif.barang_id', '=', 'barang.id')
-            ->whereColumn('alternatif.stok_tersedia', '<', 'barang.stok_minimum')
-            ->count() }};
-        const criticalStock = {{ \App\Models\Alternatif::where('stok_tersedia', '<=', 0)->count() }};
+        const safeStock = {{ $safeStock ?? 0 }};
+        const lowStock = {{ $lowStock ?? 0 }};
+        const criticalStock = {{ $criticalStock ?? 0 }};
 
         // Cek jika semua data 0
         if (safeStock === 0 && lowStock === 0 && criticalStock === 0) {
