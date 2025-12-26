@@ -15,11 +15,9 @@
                         <p class="text-sm text-slate-500">Simple Additive Weighting untuk Penentuan Persediaan Barang</p>
                     </div>
                     @if($isComplete)
-                    <form action="{{ route('perhitungan.proses') }}" method="POST">
+                    <form action="{{ route('perhitungan.proses') }}" method="POST" class="proses-form inline-block m-0">
                         @csrf
-                        <button type="submit" 
-                                onclick="return confirm('Proses perhitungan SAW sekarang?')"
-                                class="inline-block px-6 py-3 font-bold text-center text-white uppercase align-middle transition-all bg-transparent rounded-lg cursor-pointer leading-pro text-xs ease-soft-in shadow-soft-md bg-150 bg-gradient-to-tl from-green-600 to-lime-400 hover:shadow-soft-xs active:opacity-85 hover:scale-102 tracking-tight-soft bg-x-25">
+                        <button type="button" class="btn-proses inline-block px-6 py-3 font-bold text-center text-white uppercase align-middle transition-all bg-transparent rounded-lg cursor-pointer leading-pro text-xs ease-soft-in shadow-soft-md bg-150 bg-gradient-to-tl from-green-600 to-lime-400 hover:shadow-soft-xs active:opacity-85 hover:scale-102 tracking-tight-soft bg-x-25">
                             <i class="fas fa-calculator"></i> Proses Perhitungan
                         </button>
                     </form>
@@ -90,7 +88,7 @@
                 <h6 class="mb-3">Bobot Kriteria (W)</h6>
                 <div class="flex gap-4 flex-wrap">
                     @foreach($kriterias as $kriteria)
-                    <div class="bg-gradient-to-tl from-purple-700 to-pink-500 rounded-lg px-4 py-2 text-white">
+                    <div class="bg-gradient-to-tl from-purple-700 to-pink-500 rounded-lg px-4 mx-2 py-2 text-white">
                         <span class="text-xs">{{ $kriteria->kode_kriteria }}</span>
                         <span class="font-bold ml-2">{{ $kriteria->bobot }}</span>
                     </div>
@@ -209,7 +207,7 @@
                 <p class="text-sm text-yellow-700">
                     Pastikan semua barang sudah memiliki nilai pada semua kriteria sebelum melakukan perhitungan.
                 </p>
-                <a href="{{ route('penilaian.index') }}" 
+                <a href="{{ route('penilaian.index') }}"
                    class="inline-block mt-4 px-6 py-2 text-sm font-bold text-white bg-yellow-500 rounded-lg hover:bg-yellow-600">
                     Lengkapi Penilaian
                 </a>
@@ -219,3 +217,43 @@
     @endif
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    (function(){
+        function attach(){
+            document.querySelectorAll('.btn-proses').forEach(function(btn){
+                btn.addEventListener('click', function(e){
+                    e.preventDefault();
+                    const form = btn.closest('form');
+                    if (typeof Swal === 'undefined') {
+                        if (confirm('Proses perhitungan SAW sekarang?\nProses ini akan menghitung ulang dan menyimpan hasil.')) form.submit();
+                        return;
+                    }
+                    Swal.fire({
+                        title: 'Proses perhitungan?',
+                        text: 'Proses perhitungan SAW sekarang? Hasil akan disimpan.',
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#22c55e',
+                        cancelButtonColor: '#6b7280',
+                        confirmButtonText: 'Ya, proses',
+                        cancelButtonText: 'Batal'
+                    }).then(function(result){ if (result.isConfirmed) form.submit(); });
+                });
+            });
+        }
+        function loadAndAttach(){
+            if (!window.Swal) {
+                var s = document.createElement('script');
+                s.src = 'https://cdn.jsdelivr.net/npm/sweetalert2@11';
+                s.defer = true;
+                s.onload = attach;
+                document.head.appendChild(s);
+            } else attach();
+        }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', loadAndAttach);
+        else loadAndAttach();
+    })();
+</script>
+@endpush

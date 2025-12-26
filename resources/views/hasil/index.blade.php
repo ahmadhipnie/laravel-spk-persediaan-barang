@@ -15,11 +15,11 @@
                     </div>
                     @if($hasils->count() > 0)
                     <div class="flex gap-2">
-                        <a href="{{ route('perhitungan.index') }}" 
-                           class="inline-block px-6 py-3 font-bold text-center text-slate-700 uppercase align-middle transition-all bg-transparent border border-solid rounded-lg cursor-pointer leading-pro text-xs ease-soft-in shadow-soft-md bg-150 border-slate-700 hover:shadow-soft-xs active:opacity-85 hover:scale-102 tracking-tight-soft bg-x-25">
+                        <a href="{{ route('perhitungan.index') }}"
+                           class="inline-block mx-2 px-6 py-3 font-bold text-center text-slate-700 uppercase align-middle transition-all bg-transparent border border-solid rounded-lg cursor-pointer leading-pro text-xs ease-soft-in shadow-soft-md bg-150 border-slate-700 hover:shadow-soft-xs active:opacity-85 hover:scale-102 tracking-tight-soft bg-x-25">
                             <i class="fas fa-calculator"></i> Hitung Ulang
                         </a>
-                        <a href="{{ route('hasil.export.pdf') }}" 
+                        <a href="{{ route('hasil.export.pdf') }}"
                            class="inline-block px-6 py-3 font-bold text-center text-white uppercase align-middle transition-all bg-transparent rounded-lg cursor-pointer leading-pro text-xs ease-soft-in shadow-soft-md bg-150 bg-gradient-to-tl from-red-600 to-rose-400 hover:shadow-soft-xs active:opacity-85 hover:scale-102 tracking-tight-soft bg-x-25">
                             <i class="fas fa-file-pdf"></i> Export PDF
                         </a>
@@ -27,7 +27,7 @@
                     @endif
                 </div>
             </div>
-            
+
             @if($hasils->count() > 0)
             <!-- Statistik -->
             <div class="p-6">
@@ -96,7 +96,7 @@
                                  <td class="p-2 text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
                                      <div class="flex items-center justify-center">
                                          @if($hasil->ranking == 1)
-                                        {{-- Show numeric 1 (with crown emoji) to avoid icon rendering issues --}} 
+                                        {{-- Show numeric 1 (with crown emoji) to avoid icon rendering issues --}}
                                         <span class="inline-flex items-center justify-center w-10 h-10 rounded-full text-white font-extrabold text-sm shadow-lg" style="background: linear-gradient(135deg,#b28700 0%,#7f5a00 100%); border:2px solid rgba(255,255,255,0.12);">
                                             <span class="mr-0 text-lg">1</span>
                                             <span class="ml-1 text-base" aria-hidden="true">👑</span>
@@ -168,7 +168,7 @@
                     <i class="fas fa-chart-line text-6xl text-gray-300 mb-4"></i>
                     <h6 class="mb-2 text-gray-600">Belum Ada Hasil Perhitungan</h6>
                     <p class="text-sm text-gray-500 mb-4">Silakan lakukan perhitungan terlebih dahulu</p>
-                    <a href="{{ route('perhitungan.index') }}" 
+                    <a href="{{ route('perhitungan.index') }}"
                        class="inline-block px-6 py-3 font-bold text-center text-white uppercase align-middle transition-all bg-transparent rounded-lg cursor-pointer leading-pro text-xs ease-soft-in shadow-soft-md bg-150 bg-gradient-to-tl from-purple-700 to-pink-500 hover:shadow-soft-xs active:opacity-85 hover:scale-102 tracking-tight-soft bg-x-25">
                         <i class="fas fa-calculator"></i> Mulai Perhitungan
                     </a>
