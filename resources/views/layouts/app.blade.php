@@ -18,36 +18,6 @@
     <script src="https://unpkg.com/@popperjs/core@2"></script>
     <!-- Main Styling -->
     <link href="{{ asset('theme/css/soft-ui-dashboard-tailwind.css?v=1.0.5') }}" rel="stylesheet" />
-    <style>
-        /* hide scrollbar for the sidebar when needed */
-        .sidenav-scroll { -ms-overflow-style: none; scrollbar-width: none; }
-        .sidenav-scroll::-webkit-scrollbar { display: none; }
-
-        /* when a menu anchor has .is-active, make its svg icon white */
-        .sidenav-scroll a.is-active svg path,
-        .sidenav-scroll a.is-active svg circle,
-        .sidenav-scroll a.is-active svg rect {
-            fill: #fff !important;
-        }
-
-        /* ensure non-active svg icons remain dark */
-        .sidenav-scroll a:not(.is-active) svg path,
-        .sidenav-scroll a:not(.is-active) svg circle,
-        .sidenav-scroll a:not(.is-active) svg rect {
-            fill: #1f2937 !important;
-        }
-    </style>
-</head>
-
-<style>
-    /* Ensure sidebar stays fixed on large screens regardless of JS/styles */
-    @media (min-width: 1024px) {
-        .sidenav-fixed { position: fixed !important; top: 0; left: 0; height: 100vh; overflow: hidden !important; z-index: 40; }
-        .main-fixed { margin-left: 200px !important; }
-    }
-</style>
-
-<head>
 </head>
 
 <body class="m-0 font-sans text-base antialiased font-normal leading-default bg-gray-50 text-slate-500">
