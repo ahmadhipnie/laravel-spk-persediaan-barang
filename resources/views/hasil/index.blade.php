@@ -88,35 +88,34 @@
                                 <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-gray-200 shadow-none text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
                                     Tanggal
                                 </th>
-                                <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-gray-200 shadow-none text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
-                                    Aksi
-                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($hasils as $hasil)
-                            <tr class="{{ $hasil->ranking <= 3 ? 'bg-green-50' : '' }}">
-                                <td class="p-2 text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
-                                    <div class="flex items-center justify-center">
-                                        @if($hasil->ranking == 1)
-                                        <span class="inline-flex items-center justify-center w-8 h-8 bg-gradient-to-tl from-yellow-400 to-yellow-600 rounded-full text-white font-bold text-sm">
-                                            <i class="fas fa-crown"></i>
+                            <tr>
+                                 <td class="p-2 text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
+                                     <div class="flex items-center justify-center">
+                                         @if($hasil->ranking == 1)
+                                        {{-- Show numeric 1 (with crown emoji) to avoid icon rendering issues --}} 
+                                        <span class="inline-flex items-center justify-center w-10 h-10 rounded-full text-white font-extrabold text-sm shadow-lg" style="background: linear-gradient(135deg,#b28700 0%,#7f5a00 100%); border:2px solid rgba(255,255,255,0.12);">
+                                            <span class="mr-0 text-lg">1</span>
+                                            <span class="ml-1 text-base" aria-hidden="true">👑</span>
                                         </span>
-                                        @elseif($hasil->ranking == 2)
-                                        <span class="inline-flex items-center justify-center w-8 h-8 bg-gradient-to-tl from-gray-300 to-gray-500 rounded-full text-white font-bold text-sm">
+                                         @elseif($hasil->ranking == 2)
+                                        <span class="inline-flex items-center justify-center w-10 h-10 rounded-full text-white font-extrabold text-sm shadow-lg" style="background: linear-gradient(135deg,#3f3f46 0%,#111827 100%); border:2px solid rgba(255,255,255,0.08);">
                                             {{ $hasil->ranking }}
                                         </span>
-                                        @elseif($hasil->ranking == 3)
-                                        <span class="inline-flex items-center justify-center w-8 h-8 bg-gradient-to-tl from-orange-400 to-orange-600 rounded-full text-white font-bold text-sm">
+                                         @elseif($hasil->ranking == 3)
+                                        <span class="inline-flex items-center justify-center w-10 h-10 rounded-full text-white font-extrabold text-sm shadow-lg" style="background: linear-gradient(135deg,#f97316 0%,#c2410c 100%); border:2px solid rgba(255,255,255,0.08);">
                                             {{ $hasil->ranking }}
                                         </span>
-                                        @else
-                                        <span class="inline-flex items-center justify-center w-8 h-8 bg-gray-200 rounded-full text-gray-700 font-bold text-sm">
-                                            {{ $hasil->ranking }}
-                                        </span>
-                                        @endif
-                                    </div>
-                                </td>
+                                         @else
+                                         <span class="inline-flex items-center justify-center w-8 h-8 bg-gray-200 rounded-full text-gray-700 font-bold text-sm">
+                                             {{ $hasil->ranking }}
+                                         </span>
+                                         @endif
+                                     </div>
+                                 </td>
                                 <td class="p-2 align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
                                     <p class="mb-0 font-semibold leading-tight text-xs">{{ $hasil->alternatif->kode_alternatif }}</p>
                                 </td>

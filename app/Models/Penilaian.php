@@ -24,7 +24,7 @@ class Penilaian extends Model
     // Relasi ke Alternatif
     public function alternatif()
     {
-        return $this->belongsTo(Alternatif::class);
+        return $this->belongsTo(Alternatif::class, 'alternatif_id');
     }
 
     // Relasi ke Kriteria
