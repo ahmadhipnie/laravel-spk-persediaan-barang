@@ -39,14 +39,21 @@ class DashboardController extends Controller
         $mediumPriority = HasilPerhitungan::where('status_rekomendasi', 'Prioritas Sedang')->count();
         $lowPriority = HasilPerhitungan::where('status_rekomendasi', 'Prioritas Rendah')->count();
 
-        // Stock status (join with barang for stok_minimum)
-        $safeStock = Alternatif::join('barang', 'alternatif.barang_id', '=', 'barang.id')
-            ->whereColumn('alternatif.stok_tersedia', '>=', 'barang.stok_minimum')
-            ->count();
-        $lowStock = Alternatif::join('barang', 'alternatif.barang_id', '=', 'barang.id')
-            ->whereColumn('alternatif.stok_tersedia', '<', 'barang.stok_minimum')
-            ->count();
-        $criticalStock = Alternatif::where('stok_tersedia', '<=', 0)->count();
+        // Stock status - langsung dari Barang
+        $barang = \App\Models\Barang::all();
+        $safeStock = 0;
+        $lowStock = 0;
+        $criticalStock = 0;
+
+        foreach ($barang as $item) {
+            if ($item->stok_tersedia <= 0) {
+                $criticalStock++;
+            } elseif ($item->stok_tersedia < $item->stok_minimum) {
+                $lowStock++;
+            } else {
+                $safeStock++;
+            }
+        }
 
         return view('dashboard.index', compact(
             'totalAlternatif',

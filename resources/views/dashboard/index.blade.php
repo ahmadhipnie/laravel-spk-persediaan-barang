@@ -193,8 +193,8 @@
                 </p>
             </div>
             <div class="flex-auto p-4">
-                <div class="relative h-64 flex items-center justify-center">
-                    <canvas id="stockChart" height="220"></canvas>
+                <div class="relative" style="height: 240px;">
+                    <canvas id="stockChart"></canvas>
                 </div>
             </div>
         </div>
@@ -406,13 +406,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Stock Status Chart
     const stockCanvas = document.getElementById('stockChart');
     if (stockCanvas) {
-        // Setup canvas
-        const parent = stockCanvas.parentElement;
-        if (parent) {
-            stockCanvas.width = parent.clientWidth;
-            stockCanvas.height = parent.clientHeight || 250;
-        }
-
         // Hitung data
         const safeStock = {{ $safeStock ?? 0 }};
         const lowStock = {{ $lowStock ?? 0 }};
@@ -421,71 +414,76 @@ document.addEventListener('DOMContentLoaded', function() {
         // Cek jika semua data 0
         if (safeStock === 0 && lowStock === 0 && criticalStock === 0) {
             const ctx = stockCanvas.getContext('2d');
+            const parent = stockCanvas.parentElement;
+            stockCanvas.width = parent.clientWidth;
+            stockCanvas.height = parent.clientHeight;
             ctx.fillStyle = '#f3f4f6';
             ctx.fillRect(0, 0, stockCanvas.width, stockCanvas.height);
             ctx.fillStyle = '#6b7280';
             ctx.textAlign = 'center';
             ctx.font = '16px Arial';
             ctx.fillText('Belum ada data stok', stockCanvas.width/2, stockCanvas.height/2);
-            return;
-        }
+        } else {
+            const stockData = {
+                labels: ['Stok Aman', 'Stok Rendah', 'Stok Kritis'],
+                datasets: [{
+                    data: [safeStock, lowStock, criticalStock],
+                    backgroundColor: [
+                        'rgba(34, 197, 94, 0.8)',   // green
+                        'rgba(234, 179, 8, 0.8)',   // yellow
+                        'rgba(220, 38, 38, 0.8)'    // red
+                    ],
+                    borderColor: [
+                        'rgb(34, 197, 94)',
+                        'rgb(234, 179, 8)',
+                        'rgb(220, 38, 38)'
+                    ],
+                    borderWidth: 2,
+                    hoverOffset: 10
+                }]
+            };
 
-        const stockData = {
-            labels: ['Stok Aman', 'Stok Rendah', 'Stok Kritis'],
-            datasets: [{
-                data: [safeStock, lowStock, criticalStock],
-                backgroundColor: [
-                    'rgba(34, 197, 94, 0.8)',   // green
-                    'rgba(234, 179, 8, 0.8)',   // yellow
-                    'rgba(220, 38, 38, 0.8)'    // red
-                ],
-                borderColor: [
-                    'rgb(34, 197, 94)',
-                    'rgb(234, 179, 8)',
-                    'rgb(220, 38, 38)'
-                ],
-                borderWidth: 2,
-                hoverOffset: 15
-            }]
-        };
-
-        try {
-            new Chart(stockCanvas, {
-                type: 'doughnut',
-                data: stockData,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                padding: 20,
-                                font: {
-                                    size: 12
-                                },
-                                usePointStyle: true,
-                                pointStyle: 'circle'
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const label = context.label || '';
-                                    const value = context.parsed || 0;
-                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
-                                    return `${label}: ${value} item (${percentage}%)`;
+            try {
+                new Chart(stockCanvas, {
+                    type: 'doughnut',
+                    data: stockData,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    padding: 15,
+                                    font: {
+                                        size: 11
+                                    },
+                                    usePointStyle: true,
+                                    pointStyle: 'circle'
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.label || '';
+                                        const value = context.parsed || 0;
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                        return `${label}: ${value} item (${percentage}%)`;
+                                    }
                                 }
                             }
-                        }
-                    },
-                    cutout: '60%'
-                }
-            });
-        } catch (error) {
-            console.error('Error creating stock chart:', error);
+                        },
+                        cutout: '60%'
+                    }
+                });
+                console.log('Stock chart created successfully');
+            } catch (error) {
+                console.error('Error creating stock chart:', error);
+            }
         }
+    } else {
+        console.error('Stock canvas element not found');
     }
 });
 </script>
