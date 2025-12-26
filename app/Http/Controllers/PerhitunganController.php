@@ -82,8 +82,7 @@ class PerhitunganController extends Controller
     public function proses(Request $request)
     {
         try {
-            DB::beginTransaction();
-            
+            // Ambil data terlebih dahulu
             $alternatifs = Alternatif::with(['penilaian'])->get();
             $kriterias = Kriteria::all();
             
@@ -94,81 +93,78 @@ class PerhitunganController extends Controller
                     return back();
                 }
             }
-            
-            // 1. Membuat Matriks Keputusan
-            $matriksKeputusan = [];
-            foreach ($alternatifs as $alt) {
-                foreach ($kriterias as $krit) {
-                    $nilai = $alt->penilaian->where('kriteria_id', $krit->id)->first();
-                    $matriksKeputusan[$alt->id][$krit->id] = $nilai ? $nilai->nilai : 0;
-                }
-            }
-            
-            // 2. Normalisasi Matriks
-            $matriksNormalisasi = [];
-            foreach ($kriterias as $krit) {
-                $nilaiKriteria = array_column($matriksKeputusan, $krit->id);
-                
-                if ($krit->atribut == 'benefit') {
-                    $maxNilai = max($nilaiKriteria);
-                    foreach ($alternatifs as $alt) {
-                        $matriksNormalisasi[$alt->id][$krit->id] = $maxNilai > 0 ? $matriksKeputusan[$alt->id][$krit->id] / $maxNilai : 0;
-                    }
-                } else { // cost
-                    $minNilai = min($nilaiKriteria);
-                    foreach ($alternatifs as $alt) {
-                        $matriksNormalisasi[$alt->id][$krit->id] = $matriksKeputusan[$alt->id][$krit->id] > 0 ? $minNilai / $matriksKeputusan[$alt->id][$krit->id] : 0;
-                    }
-                }
-            }
-            
-            // 3. Hitung Nilai Preferensi
-            $nilaiPreferensi = [];
-            foreach ($alternatifs as $alt) {
-                $nilaiPreferensi[$alt->id] = 0;
-                foreach ($kriterias as $krit) {
-                    $nilaiPreferensi[$alt->id] += $matriksNormalisasi[$alt->id][$krit->id] * $krit->bobot;
-                }
-            }
-            
-            // Sort by nilai preferensi descending
+             
+             // 1. Membuat Matriks Keputusan
+             $matriksKeputusan = [];
+             foreach ($alternatifs as $alt) {
+                 foreach ($kriterias as $krit) {
+                     $nilai = $alt->penilaian->where('kriteria_id', $krit->id)->first();
+                    $matriksKeputusan[$alt->id][$krit->id] = $nilai ? (float) $nilai->nilai : 0.0;
+                 }
+             }
+             
+             // 2. Normalisasi Matriks
+             $matriksNormalisasi = [];
+             foreach ($kriterias as $krit) {
+                 $nilaiKriteria = array_column($matriksKeputusan, $krit->id);
+                 
+                 if ($krit->atribut == 'benefit') {
+                     $maxNilai = max($nilaiKriteria);
+                     foreach ($alternatifs as $alt) {
+                        $matriksNormalisasi[$alt->id][$krit->id] = $maxNilai > 0 ? $matriksKeputusan[$alt->id][$krit->id] / (float) $maxNilai : 0.0;
+                     }
+                 } else { // cost
+                     $minNilai = min($nilaiKriteria);
+                     foreach ($alternatifs as $alt) {
+                        $matriksNormalisasi[$alt->id][$krit->id] = $matriksKeputusan[$alt->id][$krit->id] > 0 ? (float) $minNilai / (float) $matriksKeputusan[$alt->id][$krit->id] : 0.0;
+                     }
+                 }
+             }
+             
+             // 3. Hitung Nilai Preferensi
+             $nilaiPreferensi = [];
+             foreach ($alternatifs as $alt) {
+                 $nilaiPreferensi[$alt->id] = 0;
+                 foreach ($kriterias as $krit) {
+                    $nilaiPreferensi[$alt->id] += ($matriksNormalisasi[$alt->id][$krit->id] ?? 0) * (float) $krit->bobot;
+                 }
+             }
+             
+             // Sort by nilai preferensi descending
             arsort($nilaiPreferensi);
             
-            // 4. Simpan Hasil Perhitungan
-            // Hapus hasil perhitungan sebelumnya
-            HasilPerhitungan::truncate();
-            
-            $ranking = 1;
-            foreach ($nilaiPreferensi as $alternatif_id => $nilai) {
-                // Tentukan status rekomendasi berdasarkan ranking
-                if ($ranking <= 3) {
-                    $status = 'Prioritas Tinggi';
-                } elseif ($ranking <= 7) {
-                    $status = 'Prioritas Sedang';
-                } else {
-                    $status = 'Prioritas Rendah';
+            // 4. Simpan Hasil Perhitungan di transaction block
+            DB::transaction(function() use ($nilaiPreferensi) {
+                // Avoid TRUNCATE (non-transactional in some DB engines like MySQL) and use delete() so it remains transactional
+                HasilPerhitungan::query()->delete();
+                $ranking = 1;
+                foreach ($nilaiPreferensi as $alternatif_id => $nilai) {
+                    if ($ranking <= 3) {
+                        $status = 'Prioritas Tinggi';
+                    } elseif ($ranking <= 7) {
+                        $status = 'Prioritas Sedang';
+                    } else {
+                        $status = 'Prioritas Rendah';
+                    }
+
+                    HasilPerhitungan::create([
+                        'alternatif_id' => $alternatif_id,
+                        'nilai_akhir' => $nilai,
+                        'ranking' => $ranking,
+                        'status_rekomendasi' => $status,
+                        'tanggal_perhitungan' => now()
+                    ]);
+
+                    $ranking++;
                 }
-                
-                HasilPerhitungan::create([
-                    'alternatif_id' => $alternatif_id,
-                    'nilai_akhir' => $nilai,
-                    'ranking' => $ranking,
-                    'status_rekomendasi' => $status,
-                    'tanggal_perhitungan' => now()
-                ]);
-                
-                $ranking++;
-            }
-            
-            DB::commit();
-            
+            });
+
             Alert::success('Berhasil', 'Perhitungan SAW berhasil diproses!');
             return redirect()->route('hasil.index');
-            
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Alert::error('Gagal', 'Terjadi kesalahan: ' . $e->getMessage());
+         } catch (\Exception $e) {
+            \Log::error('PerhitunganController@proses failed', ['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+            Alert::error('Gagal', 'Terjadi kesalahan saat memproses perhitungan. Silakan cek log untuk detail.');
             return back();
-        }
-    }
-}
+         }
+     }
+ }
