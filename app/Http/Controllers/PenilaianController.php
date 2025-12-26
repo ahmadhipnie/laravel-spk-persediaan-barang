@@ -39,7 +39,9 @@ class PenilaianController extends Controller
         $request->validate([
             'alternatif_id' => 'required|exists:alternatif,id',
             'penilaian' => 'required|array',
-            'penilaian.*' => 'required|numeric|min:0'
+            'penilaian.*' => 'required|numeric|between:0,1'
+        ], [
+            'penilaian.*.between' => 'Nilai kriteria harus antara 0 dan 1.'
         ]);
 
         try {
@@ -76,7 +78,9 @@ class PenilaianController extends Controller
     {
         $request->validate([
             'penilaian' => 'required|array',
-            'penilaian.*' => 'required|numeric|min:0'
+            'penilaian.*' => 'required|numeric|between:0,1'
+        ], [
+            'penilaian.*.between' => 'Nilai kriteria harus antara 0 dan 1.'
         ]);
 
         try {
