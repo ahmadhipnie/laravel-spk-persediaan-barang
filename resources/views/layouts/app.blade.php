@@ -464,6 +464,7 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <!-- main script file  -->
     <script src="{{ asset('theme/js/soft-ui-dashboard-tailwind.js?v=1.0.5') }}"></script>
+    @stack('scripts')
 </body>
 
 </html>

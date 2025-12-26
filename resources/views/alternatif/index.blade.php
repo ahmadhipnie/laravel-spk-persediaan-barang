@@ -53,11 +53,11 @@
                                     <td class="px-6 py-4 text-center align-middle"><span class="inline-block px-3 py-1 text-sm font-bold {{ $alternatif->stok_tersedia <= 0 ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800' }} rounded-full">{{ $alternatif->stok_tersedia }}</span></td>
                                     <td class="px-6 py-4 align-middle"><p class="mb-0 text-sm">{{ $alternatif->keterangan ?? '-' }}</p></td>
                                     <td class="px-6 py-4 text-center align-middle">
-                                        <a href="{{ route('alternatif.edit', $alternatif->id) }}" class="inline-flex items-center gap-2 px-3 py-2 mr-2 font-semibold text-sm text-white bg-blue-500 hover:bg-blue-600 rounded"> <i class="fas fa-edit"></i> Edit</a>
-                                        <form action="{{ route('alternatif.destroy', $alternatif->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Hapus alternatif ini?');">
+                                        <a href="{{ route('alternatif.edit', $alternatif->id) }}" class="inline-block px-3 py-2 mb-0 mr-2 font-bold text-center text-white uppercase align-middle transition-all rounded-lg cursor-pointer leading-pro text-xs ease-soft-in shadow-soft-md bg-150 bg-gradient-to-tl from-gray-900 to-slate-800 hover:shadow-soft-xs active:opacity-85 hover:scale-102 tracking-tight-soft"> <i class="fas fa-edit mr-1"></i> Edit</a>
+                                        <form action="{{ route('alternatif.destroy', $alternatif->id) }}" method="POST" class="inline-block delete-form-alt">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="inline-flex items-center gap-2 px-3 py-2 font-semibold text-sm text-white bg-red-500 hover:bg-red-600 rounded"> <i class="fas fa-trash"></i> Hapus</button>
+                                            <button type="button" class="btn-delete-alt inline-block px-3 py-2 mb-0 font-bold text-center text-white uppercase align-middle transition-all rounded-lg cursor-pointer leading-pro text-xs ease-soft-in shadow-soft-md bg-gradient-to-tl from-red-600 to-rose-400 hover:from-red-700 hover:to-rose-500 active:opacity-85 hover:scale-102 tracking-tight-soft"> <i class="fas fa-trash mr-1"></i> Hapus</button>
                                         </form>
                                     </td>
                                 </tr>
@@ -77,107 +77,6 @@
         </div>
     </div>
 </div>
-
-<!-- Modal Tambah/Edit Alternatif -->
-<div id="alternatifModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-    <div class="relative top-10 mx-auto p-5 border w-11/12 md:w-2/3 lg:w-1/2 shadow-lg rounded-md bg-white">
-        <div class="mt-3">
-            <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4" id="alternatifModalTitle">Tambah Alternatif</h3>
-            <form id="alternatifForm" method="POST" action="{{ route('alternatif.store') }}">
-                @csrf
-                <input type="hidden" name="_method" id="alternatifFormMethod" value="POST">
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700">Kode Alternatif *</label>
-                        <input type="text" name="kode_alternatif" id="kode_alternatif" required class="block w-full rounded-lg border px-3 py-2" placeholder="ALT001">
-                    </div>
-
-                    <div>
-                        <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700">Pilih Barang dari Master *</label>
-                        <select name="barang_id" id="barang_id" required onchange="fillBarangData()" class="block w-full rounded-lg border px-3 py-2">
-                            <option value="">-- Pilih Barang --</option>
-                            @foreach($barangs as $brg)
-                            <option value="{{ $brg->id }}" data-kode="{{ $brg->kode_barang }}" data-nama="{{ $brg->nama_barang }}" data-stok="{{ $brg->stok_tersedia }}">{{ $brg->kode_barang }} - {{ $brg->nama_barang }} (Stok: {{ $brg->stok_tersedia }})</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700">Nama Barang</label>
-                        <input type="text" name="nama_barang" id="alt_nama_barang" readonly class="block w-full rounded-lg border bg-gray-100 px-3 py-2">
-                    </div>
-
-                    <div>
-                        <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700">Stok Tersedia</label>
-                        <input type="number" name="stok_tersedia" id="alt_stok_tersedia" readonly min="0" class="block w-full rounded-lg border bg-gray-100 px-3 py-2">
-                    </div>
-
-                    <div class="md:col-span-2">
-                        <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700">Keterangan</label>
-                        <textarea name="keterangan" id="alt_keterangan" rows="3" class="block w-full rounded-lg border px-3 py-2" placeholder="Keterangan (opsional)"></textarea>
-                    </div>
-                </div>
-
-                <div class="flex gap-2 mt-6">
-                    <button type="submit" class="px-6 py-3 font-bold text-white bg-gray-800 rounded">Simpan</button>
-                    <button type="button" onclick="closeAlternatifModal()" class="px-6 py-3 font-bold text-slate-700 border rounded">Batal</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<script>
-    function openAlternatifModal() {
-        document.getElementById('alternatifModalTitle').textContent = 'Tambah Alternatif';
-        document.getElementById('alternatifForm').action = '{{ route("alternatif.store") }}';
-        document.getElementById('alternatifFormMethod').value = 'POST';
-        document.getElementById('kode_alternatif').value = '';
-        document.getElementById('barang_id').value = '';
-        document.getElementById('alt_nama_barang').value = '';
-        document.getElementById('alt_stok_tersedia').value = '';
-        document.getElementById('alt_keterangan').value = '';
-        document.getElementById('alternatifModal').classList.remove('hidden');
-    }
-
-    function editAlternatifModal(item) {
-        document.getElementById('alternatifModalTitle').textContent = 'Edit Alternatif';
-        document.getElementById('alternatifForm').action = '/alternatif/' + item.id;
-        document.getElementById('alternatifFormMethod').value = 'PUT';
-        document.getElementById('kode_alternatif').value = item.kode_alternatif;
-        if (item.barang_id) document.getElementById('barang_id').value = item.barang_id;
-        if (item.barang_id) fillBarangData();
-        document.getElementById('alt_nama_barang').value = item.nama_barang;
-        document.getElementById('alt_stok_tersedia').value = item.stok_tersedia;
-        document.getElementById('alt_keterangan').value = item.keterangan || '';
-        document.getElementById('alternatifModal').classList.remove('hidden');
-    }
-
-    function closeAlternatifModal() {
-        document.getElementById('alternatifModal').classList.add('hidden');
-    }
-
-    function fillBarangData() {
-        const sel = document.getElementById('barang_id');
-        const opt = sel.options[sel.selectedIndex];
-        if (!opt || !opt.value) {
-            document.getElementById('alt_nama_barang').value = '';
-            document.getElementById('alt_stok_tersedia').value = '';
-            return;
-        }
-        document.getElementById('alt_nama_barang').value = opt.dataset.nama || '';
-        document.getElementById('alt_stok_tersedia').value = opt.dataset.stok || '';
-        if (opt.dataset.kode && !document.getElementById('kode_alternatif').value) {
-            document.getElementById('kode_alternatif').value = opt.dataset.kode;
-        }
-    }
-
-    document.getElementById('alternatifModal').addEventListener('click', function(e) {
-        if (e.target === this) closeAlternatifModal();
-    });
-</script>
-
 
 <footer class="pt-4">
     <div class="w-full px-6 mx-auto">
@@ -224,3 +123,43 @@
 </footer>
 
 @endsection
+
+@push('scripts')
+<script>
+    (function(){
+        function attach() {
+            document.querySelectorAll('.btn-delete-alt').forEach(function(btn){
+                btn.addEventListener('click', function(e){
+                    e.preventDefault();
+                    const form = btn.closest('form');
+                    if (typeof Swal === 'undefined') {
+                        if (confirm('Hapus alternatif ini?\nData akan dihapus dan tidak bisa dikembalikan.')) form.submit();
+                        return;
+                    }
+                    Swal.fire({
+                        title: 'Hapus alternatif?',
+                        text: 'Data akan dihapus dan tidak bisa dikembalikan.',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#6b7280',
+                        confirmButtonText: 'Ya, hapus',
+                        cancelButtonText: 'Batal'
+                    }).then(function(result){ if (result.isConfirmed) form.submit(); });
+                });
+            });
+        }
+        function loadAndAttach(){
+            if (!window.Swal) {
+                var s = document.createElement('script');
+                s.src = 'https://cdn.jsdelivr.net/npm/sweetalert2@11';
+                s.defer = true;
+                s.onload = attach;
+                document.head.appendChild(s);
+            } else attach();
+        }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', loadAndAttach);
+        else loadAndAttach();
+    })();
+</script>
+@endpush
