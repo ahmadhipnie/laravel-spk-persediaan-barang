@@ -25,6 +25,7 @@
 
                     <div class="border-t border-gray-200 pt-4 mt-4">
                         <h6 class="mb-4 text-sm font-bold">Nilai Kriteria</h6>
+                        <p class="text-xs text-slate-500 mb-3">Masukkan nilai pada rentang 0 sampai 1 (mis. 0.25, 0.75). Nilai digunakan untuk perhitungan SAW.</p>
 
                         @foreach($kriterias as $kriteria)
                         <div class="mb-4">
@@ -35,6 +36,7 @@
                             <input type="number"
                                    name="penilaian[{{ $kriteria->id }}]"
                                    step="0.01"
+                                   min="0" max="1"
                                    required
                                    value="{{ old('penilaian.'.$kriteria->id, $penilaians[$kriteria->id] ?? '') }}"
                                    class="focus:shadow-soft-primary-outline text-sm leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 transition-all focus:border-fuchsia-300 focus:outline-none focus:transition-shadow"
