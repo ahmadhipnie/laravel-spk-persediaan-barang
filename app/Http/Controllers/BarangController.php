@@ -16,6 +16,11 @@ class BarangController extends Controller
         return view('barang.index', compact('barangs'));
     }
 
+    public function create()
+    {
+        return view('barang.create');
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -47,6 +52,12 @@ class BarangController extends Controller
         }
     }
 
+    public function edit($id)
+    {
+        $barang = Barang::findOrFail($id);
+        return view('barang.edit', compact('barang'));
+    }
+
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -76,7 +87,7 @@ class BarangController extends Controller
     {
         try {
             $barang = Barang::findOrFail($id);
-            
+
             // Cek apakah barang sudah digunakan di alternatif
             // If migration adding barang_id to alternatif hasn't been run yet,
             // referencing the relationship will cause SQL error. Check column first.
@@ -92,7 +103,7 @@ class BarangController extends Controller
                     return back();
                 }
             }
-            
+
             $barang->delete();
             Alert::success('Berhasil', 'Data barang berhasil dihapus');
             return redirect()->route('barang.index');
