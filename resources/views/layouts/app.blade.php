@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('theme/img/apple-icon.png') }}" />
     <link rel="icon" type="image/png" href="{{ asset('theme/img/favicon.png') }}" />
-    <title>SPK Persediaan Barang - SAW Method</title>
+    <title>Soft UI Dashboard Tailwind</title>
     <!--     Fonts and icons     -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
     <!-- Font Awesome Icons -->
@@ -18,29 +18,57 @@
     <script src="https://unpkg.com/@popperjs/core@2"></script>
     <!-- Main Styling -->
     <link href="{{ asset('theme/css/soft-ui-dashboard-tailwind.css?v=1.0.5') }}" rel="stylesheet" />
+    <style>
+        .hide-scrollbar {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none; /* Chrome, Safari and Opera */
+        }
+        /* Icon color: white when item is active, dark otherwise */
+        a.is-active svg path,
+        a.is-active svg circle,
+        a.is-active svg rect,
+        a.is-active svg g {
+            fill: #ffffff !important;
+            stroke: #ffffff !important;
+            color: #ffffff !important;
+        }
+        /* Ensure default (non-active) icons are dark */
+        aside svg path,
+        aside svg circle,
+        aside svg rect {
+            fill: #1f2937; /* slate-800 */
+            stroke: #1f2937;
+        }
+    </style>
+    <!-- Nepcha Analytics (nepcha.com) -->
+    <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
+    <script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script>
 </head>
 
 <body class="m-0 font-sans text-base antialiased font-normal leading-default bg-gray-50 text-slate-500">
     <!-- sidenav  -->
     @include('sweetalert::alert')
 
-    <div class="h-screen overflow-hidden flex flex-col lg:flex-row">
-        <aside
-            class="sidenav-fixed max-w-62.5 ease-nav-brand z-990 relative block w-full lg:w-68.5 flex-none flex-wrap items-start justify-between rounded-2xl border-0 bg-white p-0 antialiased shadow-none transition-transform duration-200 lg:bg-transparent lg:fixed lg:top-0 lg:left-0 lg:h-screen lg:overflow-hidden lg:z-40">
+    <aside
+     class="max-w-62.5 ease-nav-brand z-990 fixed inset-y-0 my-0 ml-4 block w-full -translate-x-full flex-wrap items-center justify-between overflow-hidden rounded-2xl border-0 bg-white p-0 antialiased shadow-none transition-transform duration-200 xl:left-0 xl:translate-x-0 xl:bg-transparent">
         <div class="h-19.5">
             <i class="absolute top-0 right-0 hidden p-4 opacity-50 cursor-pointer fas fa-times text-slate-400 xl:hidden"
                 sidenav-close></i>
-            <a class="block px-8 py-6 m-0 text-sm whitespace-nowrap text-slate-700" href="{{ route('dashboard.index') }}">
+            <a class="block px-8 py-6 m-0 text-sm whitespace-nowrap text-slate-700" href="javascript:;" target="_blank">
                 <img src="{{ asset('theme/img/logo-ct.png') }}"
                     class="inline h-full max-w-full transition-all duration-200 ease-nav-brand max-h-8"
                     alt="main_logo" />
-                <span class="ml-1 font-semibold transition-all duration-200 ease-nav-brand">SPK Persediaan Barang</span>
+                <span class="ml-1 font-semibold transition-all duration-200 ease-nav-brand">Website SPK
+                    Ketersediaan</span>
             </a>
         </div>
 
         <hr class="h-px mt-0 bg-transparent bg-gradient-to-r from-transparent via-black/40 to-transparent" />
 
-        <div class="items-center block w-auto grow basis-full sidenav-scroll overflow-hidden px-4">
+        <div class="items-center block w-auto h-full hide-scrollbar h-sidenav grow basis-full">
             <ul class="flex flex-col pl-0 mb-0">
                 <!-- Dashboard -->
                 <li class="mt-0.5 w-full">
@@ -101,7 +129,6 @@
 </li>
 
 <!-- Data Alternatif tetap ada di bawahnya -->
-
 
                 <!-- Data Barang/Alternatif -->
                 <li class="mt-0.5 w-full">
@@ -385,14 +412,14 @@
     </aside>
         <!-- end sidenav -->
 
-        <main class="main-fixed ease-soft-in-out relative flex-1 h-screen overflow-auto rounded-xl transition-all duration-200 lg:ml-68.5">
+        <main class="ease-soft-in-out xl:ml-68.5 relative h-full max-h-screen rounded-xl transition-all duration-200">
         <!-- Navbar -->
         <nav class="relative flex flex-wrap items-center justify-between px-0 py-2 mx-6 transition-all shadow-none duration-250 ease-soft-in rounded-2xl lg:flex-nowrap lg:justify-start"
             navbar-main navbar-scroll="true">
             <div class="flex items-center justify-between w-full px-4 py-1 mx-auto flex-wrap-inherit">
                 <nav>
                     <!-- breadcrumb -->
-                    <ol class="flex flex-wrap pt-1 mr-12 bg-transparent rounded-lg sm:mr-16">
+                   <ol class="flex flex-wrap pt-1 mr-12 bg-transparent rounded-lg sm:mr-16">
                         <li class="text-sm leading-normal">
                             <a class="opacity-50 text-slate-700" href="javascript:;">@yield('title')</a>
                         </li>
@@ -413,8 +440,6 @@
         </div>
         <!-- end cards -->
     </main>
-
-    </div>
 
     <!-- plugin for charts  -->
     <script src="{{ asset('theme/js/plugins/chartjs.min.js') }}"></script>
