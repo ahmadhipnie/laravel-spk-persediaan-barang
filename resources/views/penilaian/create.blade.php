@@ -13,7 +13,7 @@
             <div class="flex-auto px-6 pt-6 pb-6">
                 <form action="{{ route('penilaian.store') }}" method="POST">
                     @csrf
-                    
+
                     <div class="mb-4">
                         <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700">Pilih Barang</label>
                         <select name="alternatif_id" required
@@ -32,15 +32,15 @@
 
                     <div class="border-t border-gray-200 pt-4 mt-4">
                         <h6 class="mb-4 text-sm font-bold">Input Nilai Kriteria</h6>
-                        
+
                         @foreach($kriterias as $kriteria)
                         <div class="mb-4">
                             <label class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700">
                                 {{ $kriteria->nama_kriteria }} ({{ $kriteria->kode_kriteria }})
                                 <span class="text-xs font-normal text-slate-500">- {{ ucfirst($kriteria->atribut) }}</span>
                             </label>
-                            <input type="number" 
-                                   name="penilaian[{{ $kriteria->id }}]" 
+                            <input type="number"
+                                   name="penilaian[{{ $kriteria->id }}]"
                                    step="0.01"
                                    required
                                    value="{{ old('penilaian.'.$kriteria->id) }}"
@@ -53,13 +53,13 @@
                         @endforeach
                     </div>
 
-                    <div class="flex gap-2 mt-6">
+                    <div class="flex gap-2 mt-6 pb-6 mb-4 items-center">
                         <button type="submit"
                                 class="inline-block px-6 py-3 font-bold text-center text-white uppercase align-middle transition-all bg-transparent rounded-lg cursor-pointer leading-pro text-xs ease-soft-in shadow-soft-md bg-150 bg-gradient-to-tl from-gray-900 to-slate-800 hover:shadow-soft-xs active:opacity-85 hover:scale-102 tracking-tight-soft bg-x-25">
                             Simpan
                         </button>
                         <a href="{{ route('penilaian.index') }}"
-                           class="inline-block px-6 py-3 font-bold text-center text-slate-700 uppercase align-middle transition-all bg-transparent border border-solid rounded-lg cursor-pointer leading-pro text-xs ease-soft-in shadow-soft-md bg-150 border-slate-700 hover:shadow-soft-xs active:opacity-85 hover:scale-102 tracking-tight-soft bg-x-25">
+                           class="inline-block mx-2 px-6 py-3 font-bold text-center text-slate-700 uppercase align-middle transition-all bg-transparent border border-solid rounded-lg cursor-pointer leading-pro text-xs ease-soft-in shadow-soft-md bg-150 border-slate-700 hover:shadow-soft-xs active:opacity-85 hover:scale-102 tracking-tight-soft bg-x-25">
                             Batal
                         </a>
                     </div>
