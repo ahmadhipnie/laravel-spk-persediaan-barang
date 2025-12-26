@@ -28,39 +28,94 @@
                 </div>
             </div>
 
-            @if($hasils->count() > 0)
-            <!-- Statistik -->
-            <div class="p-6">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="bg-gradient-to-tl from-green-600 to-lime-400 rounded-lg p-4 text-white">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-sm opacity-80">Prioritas Tinggi</p>
-                                <h4 class="text-2xl font-bold">{{ $hasils->where('status_rekomendasi', 'Prioritas Tinggi')->count() }}</h4>
+         @if($hasils->count() > 0)
+    <!-- Statistik Modern -->
+    <div class="p-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Prioritas Tinggi -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border-l-4 border-red-500 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                <div class="p-5">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-3 bg-red-100 dark:bg-red-900/30 rounded-xl">
+                                <i class="fas fa-fire text-red-600 dark:text-red-400 text-xl"></i>
                             </div>
-                            <i class="fas fa-arrow-up text-3xl opacity-50"></i>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-300">Prioritas Tinggi</p>
+                                <h4 class="text-2xl font-bold text-gray-800 dark:text-white mt-1">
+                                    {{ $hasils->where('status_rekomendasi', 'Prioritas Tinggi')->count() }}
+                                    <span class="text-sm font-normal text-gray-500">item</span>
+                                </h4>
+                            </div>
                         </div>
                     </div>
-                    <div class="bg-gradient-to-tl from-yellow-600 to-yellow-400 rounded-lg p-4 text-white">
+                    <div class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
                         <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-sm opacity-80">Prioritas Sedang</p>
-                                <h4 class="text-2xl font-bold">{{ $hasils->where('status_rekomendasi', 'Prioritas Sedang')->count() }}</h4>
+                            <span class="text-xs text-gray-500 dark:text-gray-400">Segera restock</span>
+                            <div class="px-2 py-1 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-300 text-xs font-medium rounded-full">
+                                <i class="fas fa-exclamation-circle mr-1"></i> Urgent
                             </div>
-                            <i class="fas fa-minus text-3xl opacity-50"></i>
-                        </div>
-                    </div>
-                    <div class="bg-gradient-to-tl from-red-600 to-rose-400 rounded-lg p-4 text-white">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-sm opacity-80">Prioritas Rendah</p>
-                                <h4 class="text-2xl font-bold">{{ $hasils->where('status_rekomendasi', 'Prioritas Rendah')->count() }}</h4>
-                            </div>
-                            <i class="fas fa-arrow-down text-3xl opacity-50"></i>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Prioritas Sedang -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border-l-4 border-yellow-500 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                <div class="p-5">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-3 bg-yellow-100 dark:bg-yellow-900/30 rounded-xl">
+                                <i class="fas fa-balance-scale text-yellow-600 dark:text-yellow-400 text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-300">Prioritas Sedang</p>
+                                <h4 class="text-2xl font-bold text-gray-800 dark:text-white mt-1">
+                                    {{ $hasils->where('status_rekomendasi', 'Prioritas Sedang')->count() }}
+                                    <span class="text-sm font-normal text-gray-500">item</span>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-gray-500 dark:text-gray-400">Monitor stok</span>
+                            <div class="px-2 py-1 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-300 text-xs font-medium rounded-full">
+                                <i class="fas fa-clock mr-1"></i> Medium
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Prioritas Rendah -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border-l-4 border-green-500 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                <div class="p-5">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-3 bg-green-100 dark:bg-green-900/30 rounded-xl">
+                                <i class="fas fa-check-circle text-green-600 dark:text-green-400 text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-300">Prioritas Rendah</p>
+                                <h4 class="text-2xl font-bold text-gray-800 dark:text-white mt-1">
+                                    {{ $hasils->where('status_rekomendasi', 'Prioritas Rendah')->count() }}
+                                    <span class="text-sm font-normal text-gray-500">item</span>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-gray-500 dark:text-gray-400">Stok aman</span>
+                            <div class="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300 text-xs font-medium rounded-full">
+                                <i class="fas fa-check mr-1"></i> Stable
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
             <div class="flex-auto px-0 pt-0 pb-2">
                 <div class="p-0 overflow-x-auto">

@@ -453,6 +453,10 @@
         <!-- end cards -->
     </main>
 
+    <!-- Pastikan Font Awesome sudah terpasang -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Jika belum, tambahkan CDN Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <!-- plugin for charts  -->
     <script src="{{ asset('theme/js/plugins/chartjs.min.js') }}"></script>
     <script src="{{ asset('theme/js/plugins/Chart.extension.js') }}"></script>
