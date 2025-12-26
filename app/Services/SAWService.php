@@ -45,7 +45,19 @@ class SAWService
             ];
 
         } catch (\Exception $e) {
-            DB::rollBack();
+            // Only roll back if a transaction is active to avoid 'There is no active transaction' errors
+            try {
+                $pdo = DB::getPdo();
+                if ($pdo && $pdo->inTransaction()) {
+                    DB::rollBack();
+                }
+            } catch (\Throwable $ex) {
+                // swallow secondary exceptions but log them
+                \Log::error('Error while attempting to rollback SAWService transaction', ['error' => $ex->getMessage()]);
+            }
+
+            \Log::error('SAWService::hitungSAW failed', ['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+
             return [
                 'success' => false,
                 'message' => $e->getMessage()
@@ -123,7 +135,8 @@ class SAWService
     private function simpanHasil($nilaiPreferensi)
     {
         // Hapus hasil perhitungan sebelumnya
-        HasilPerhitungan::truncate();
+        // Use delete() instead of truncate() to avoid implicit commit in some DBs (e.g., MySQL)
+        HasilPerhitungan::query()->delete();
 
         $ranking = 1;
         $hasil = [];
