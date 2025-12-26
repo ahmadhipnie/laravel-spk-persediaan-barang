@@ -36,6 +36,57 @@
                     @endforeach
                 </select>
             </div>
+                    <script>
+                    // SweetAlert2 for delete confirmation
+                    function attachDeleteHandlers() {
+                        document.querySelectorAll('.btn-delete').forEach(function(btn){
+                            btn.addEventListener('click', function(e){
+                                e.preventDefault();
+                                const form = btn.closest('form');
+                                if (typeof Swal === 'undefined') {
+                                    // fallback to native confirm if SweetAlert isn't loaded
+                                    if (confirm('Hapus data?\nData akan dihapus dan tidak bisa dikembalikan.')) {
+                                        form.submit();
+                                    }
+                                    return;
+                                }
+                                Swal.fire({
+                                    title: 'Hapus data?',
+                                    text: 'Data akan dihapus dan tidak bisa dikembalikan.',
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#d33',
+                                    cancelButtonColor: '#6b7280',
+                                    confirmButtonText: 'Ya, hapus',
+                                    cancelButtonText: 'Batal'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        form.submit();
+                                    }
+                                });
+                            });
+                        });
+                    }
+
+                    function loadSweetAlertAndAttach() {
+                        if (!window.Swal) {
+                            var s = document.createElement('script');
+                            s.src = 'https://cdn.jsdelivr.net/npm/sweetalert2@11';
+                            s.defer = true;
+                            s.onload = attachDeleteHandlers;
+                            document.head.appendChild(s);
+                        } else {
+                            attachDeleteHandlers();
+                        }
+                    }
+
+                    if (document.readyState === 'loading') {
+                        document.addEventListener('DOMContentLoaded', loadSweetAlertAndAttach);
+                    } else {
+                        loadSweetAlertAndAttach();
+                    }
+                    </script>
+
         </div>
 
         <div class="flex-auto p-4">
@@ -127,16 +178,15 @@
                             </td>
                             <td class="px-6 py-4 text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
                                 <a href="{{ route('barang.edit', $item->id) }}"
-                                    class="inline-block px-3 py-2 mb-0 mr-2 font-bold text-center uppercase align-middle transition-all rounded-lg cursor-pointer leading-pro text-xs ease-soft-in hover:scale-105 active:opacity-85 text-white bg-blue-500 hover:bg-blue-600 shadow-md">
-                                    <i class="fas fa-edit"></i>
+                                    class="inline-block px-3 py-2 mb-0 mr-2 font-bold text-center text-white uppercase align-middle transition-all rounded-lg cursor-pointer leading-pro text-xs ease-soft-in shadow-soft-md bg-150 bg-gradient-to-tl from-gray-900 to-slate-800 hover:shadow-soft-xs active:opacity-85 hover:scale-102 tracking-tight-soft">
+                                    <i class="fas fa-edit mr-1"></i> Edit
                                 </a>
-                                <form action="{{ route('barang.destroy', $item->id) }}" method="POST" class="inline-block">
+                                    <form action="{{ route('barang.destroy', $item->id) }}" method="POST" class="inline-block delete-form">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" onclick="return confirm('Hapus data ini?')"
-                                        class="px-3 py-2 mb-0 font-bold text-center uppercase align-middle transition-all rounded-lg cursor-pointer leading-pro text-xs ease-soft-in hover:scale-105 active:opacity-85 text-white bg-red-500 hover:bg-red-600 shadow-md">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
+                                        <button type="button" class="btn-delete inline-block px-3 py-2 mb-0 font-bold text-center text-white uppercase align-middle transition-all rounded-lg cursor-pointer leading-pro text-xs ease-soft-in shadow-soft-md bg-gradient-to-tl from-red-600 to-rose-400 hover:from-red-700 hover:to-rose-500 active:opacity-85 hover:scale-102 tracking-tight-soft">
+                                            <i class="fas fa-trash mr-1"></i> Hapus
+                                        </button>
                                 </form>
                             </td>
                         </tr>

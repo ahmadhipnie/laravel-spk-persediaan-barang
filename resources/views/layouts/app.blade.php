@@ -42,6 +42,18 @@
             fill: #1f2937; /* slate-800 */
             stroke: #1f2937;
         }
+        /* Ensure action buttons in tables are visible */
+        .action-btn {
+            background-color: #2563eb !important; /* blue-600 */
+            color: #ffffff !important;
+            border: none !important;
+        }
+        .action-btn:hover {
+            background-color: #1e40af !important; /* blue-800 */
+        }
+        .action-btn i {
+            color: #ffffff !important;
+        }
     </style>
     <!-- Nepcha Analytics (nepcha.com) -->
     <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
